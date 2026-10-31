@@ -1,0 +1,2438 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>퇴직연금 중도인출 사유별 징구서류 & 저율분리과세 심사 마법사</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Pretendard:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    * { font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, Roboto, sans-serif; }
+    body { background-color: #f1f5f9; color: #0f172a; }
+    .step-card { transition: all 0.2s ease-in-out; }
+    .step-card:hover { transform: translateY(-1px); }
+    .custom-scroll::-webkit-scrollbar { width: 6px; height: 6px; }
+    .custom-scroll::-webkit-scrollbar-track { background: #f1f5f9; }
+    .custom-scroll::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 3px; }
+    .custom-scroll::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+    .flow-node { position: relative; transition: all 0.2s ease; }
+    .flow-node:hover { transform: scale(1.01); }
+    @media print {
+      .no-print { display: none !important; }
+      .print-full { width: 100% !important; max-width: 100% !important; position: static !important; box-shadow: none !important; }
+      body { background: white; }
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col">
+
+  <!-- Top Header -->
+  <header class="bg-slate-900 text-white shadow-lg sticky top-0 z-30 no-print">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-xl bg-blue-600 flex items-center justify-center font-extrabold text-xl shadow-inner">
+          P
+        </div>
+        <div>
+          <div class="flex items-center gap-2 flex-wrap">
+            <h1 class="text-lg sm:text-xl font-bold tracking-tight">퇴직연금 중도인출 징구서류 & 저율분리과세 심사 마법사</h1>
+            <span class="bg-emerald-500/20 text-emerald-300 border border-emerald-400/30 text-xs px-2 py-0.5 rounded-full font-medium">통합 완성본</span>
+          </div>
+          <p class="text-xs text-slate-400 mt-0.5">DC / 개인형IRP 법정 중도인출 · IRP 부득이한 인출(비정기연금/해지) · 세법상 저율 분리과세 상시 표시</p>
+        </div>
+      </div>
+
+      <!-- Navigation Tabs & Self Download Button -->
+      <div class="flex items-center gap-2 flex-wrap">
+        <div class="flex bg-slate-800 p-1 rounded-xl border border-slate-700 flex-wrap gap-1">
+          <button type="button" onclick="switchMainTab('wizard')" id="tab-btn-wizard" class="px-3.5 py-2 rounded-lg text-xs sm:text-sm font-semibold transition-all bg-blue-600 text-white shadow">
+            📋 서류 & 과세 마법사
+          </button>
+          <button type="button" onclick="switchMainTab('taxguide')" id="tab-btn-taxguide" class="px-3.5 py-2 rounded-lg text-xs sm:text-sm font-semibold transition-all text-slate-300 hover:text-white">
+            ⚖️ 저율 분리과세 비교표
+          </button>
+          <button type="button" onclick="switchMainTab('flowchart')" id="tab-btn-flowchart" class="px-3.5 py-2 rounded-lg text-xs sm:text-sm font-semibold transition-all text-slate-300 hover:text-white">
+            🔀 인터랙티브 순서도
+          </button>
+          <button type="button" onclick="switchMainTab('calculator')" id="tab-btn-calculator" class="px-3.5 py-2 rounded-lg text-xs sm:text-sm font-semibold transition-all text-slate-300 hover:text-white">
+            🧮 요양 12.5% & 한도 계산기
+          </button>
+        </div>
+        <button type="button" onclick="downloadSelfHtml()" class="bg-emerald-600 hover:bg-emerald-500 text-white text-xs sm:text-sm font-bold px-3.5 py-2.5 rounded-xl shadow transition flex items-center gap-1.5" title="현재 프로그램을 PC에 HTML 파일로 저장합니다">
+          <span>💾 HTML 파일 저장</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content Container -->
+  <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6">
+
+    <!-- ==========================================
+         TAB 1: 인터랙티브 서류 & 과세 안내 마법사
+         ========================================== -->
+    <section id="section-wizard" class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+      
+      <!-- Left Column: Step-by-Step Decision Inputs (7 cols) -->
+      <div class="lg:col-span-7 space-y-5 no-print">
+        
+        <!-- Step 1: 가입 제도 및 인출 유형 선택 -->
+        <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-5">
+          <div class="flex items-center justify-between mb-3">
+            <span class="text-xs font-bold uppercase tracking-wider text-blue-600 bg-blue-50 px-2.5 py-1 rounded-md">Step 1</span>
+            <span class="text-xs text-slate-400">근로자퇴직급여 보장법 & 소득세법 시행령 제20조의2</span>
+          </div>
+          <h2 class="text-base font-bold text-slate-800 mb-3">1. 가입 제도 및 인출 유형을 선택하세요</h2>
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+            <button type="button" onclick="selectPlanType('DC')" id="plan-DC" class="step-card text-left p-3.5 rounded-xl border-2 border-blue-600 bg-blue-50/50 relative">
+              <div class="font-bold text-sm text-slate-900 flex items-center justify-between">
+                <span>DC형 중도인출</span>
+                <span class="w-2.5 h-2.5 rounded-full bg-blue-600" id="dot-DC"></span>
+              </div>
+              <p class="text-xs text-slate-600 mt-1 leading-relaxed">확정기여형 퇴직연금<br/><span class="text-[11px] text-blue-700 font-medium">※ 전월세 재직중 1회, 요양 임금 12.5% 초과</span></p>
+            </button>
+
+            <button type="button" onclick="selectPlanType('IRP')" id="plan-IRP" class="step-card text-left p-3.5 rounded-xl border-2 border-slate-200 hover:border-slate-300 bg-white relative">
+              <div class="font-bold text-sm text-slate-900 flex items-center justify-between">
+                <span>개인형IRP 중도인출</span>
+                <span class="w-2.5 h-2.5 rounded-full bg-slate-300" id="dot-IRP"></span>
+              </div>
+              <p class="text-xs text-slate-500 mt-1 leading-relaxed">개인형 퇴직연금<br/><span class="text-[11px] text-slate-600 font-medium">※ 전월세 무제한, 요양 소득요건 없음</span></p>
+            </button>
+
+            <button type="button" onclick="selectPlanType('IRP_SPECIAL')" id="plan-IRP_SPECIAL" class="step-card text-left p-3.5 rounded-xl border-2 border-slate-200 hover:border-slate-300 bg-white relative">
+              <div class="font-bold text-sm text-slate-900 flex items-center justify-between">
+                <span>IRP 부득이한 인출</span>
+                <span class="w-2.5 h-2.5 rounded-full bg-slate-300" id="dot-IRP_SPECIAL"></span>
+              </div>
+              <p class="text-xs text-slate-500 mt-1 leading-relaxed">비정기연금인출 · 계약해지<br/><span class="text-[11px] text-emerald-700 font-semibold">※ 연금저축 동일 기준 (3개월 요양 등)</span></p>
+            </button>
+          </div>
+
+          <!-- 상시 표시되는 세법상 저율 분리과세 요약 배너 (DC / IRP / IRP 부득이한 인출 공통) -->
+          <div class="mt-4 p-3.5 rounded-xl bg-slate-50 border border-slate-200 text-xs space-y-2">
+            <div class="flex flex-wrap items-center justify-between gap-2">
+              <span class="font-bold text-slate-800 flex items-center gap-1.5">
+                ⚖️ 세법상 저율 분리과세(연금소득세) 적용 기준 <span class="text-[11px] font-normal text-slate-500">(DC형 · 개인형IRP 공통 적용)</span>
+              </span>
+              <span class="text-[11px] font-bold text-emerald-700 bg-emerald-50 border border-emerald-200 px-2 py-0.5 rounded">사유 확인일로부터 6개월 이내 신청 필수</span>
+            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+              <div class="bg-white p-2.5 rounded-lg border border-slate-200">
+                <div class="font-bold text-blue-900 text-[11px]">🏢 회사부담금(DC) · 이연퇴직소득(IRP)</div>
+                <div class="text-[11px] text-slate-600 mt-0.5">
+                  · <strong>저율과세 인정 사유</strong>: 산출 퇴직소득세의 <strong class="text-emerald-700">70%</strong> (연금소득세)<br/>
+                  · <strong>일반 과세 사유</strong>: 산출 퇴직소득세 <strong class="text-rose-600">100%</strong> 부과
+                </div>
+              </div>
+              <div class="bg-white p-2.5 rounded-lg border border-slate-200">
+                <div class="font-bold text-indigo-900 text-[11px]">📈 운용수익(DC·IRP) · 세액공제 본인부담금</div>
+                <div class="text-[11px] text-slate-600 mt-0.5">
+                  · <strong>저율과세 인정 사유</strong>: 연금소득세 <strong class="text-emerald-700">3.3% ~ 5.5%</strong> 분리과세 (한도 무제한)<br/>
+                  · <strong>일반 과세 사유</strong>: 기타소득세 <strong class="text-rose-600">16.5%</strong> 분리과세
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Step 2: 인출 사유 선택 -->
+        <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-5">
+          <div class="flex items-center justify-between mb-3">
+            <span class="text-xs font-bold uppercase tracking-wider text-blue-600 bg-blue-50 px-2.5 py-1 rounded-md">Step 2</span>
+            <span class="text-xs text-slate-400" id="step2-subtitle">법정 중도인출 사유 선택 (저율과세 여부 함께 표시)</span>
+          </div>
+          <h2 class="text-base font-bold text-slate-800 mb-3">2. 세부 인출 사유를 선택하세요</h2>
+          
+          <div id="reason-buttons-container" class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+            <!-- Dynamically populated by JS -->
+          </div>
+        </div>
+
+        <!-- Step 3: 신청 시기 및 자격 요건 검증 (Gatekeeper) -->
+        <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-5">
+          <div class="flex items-center justify-between mb-3">
+            <span class="text-xs font-bold uppercase tracking-wider text-amber-600 bg-amber-50 px-2.5 py-1 rounded-md">Step 3 · 자격 및 기한 검증</span>
+            <span class="text-xs text-slate-400">신청서상 신청일 기준 판단</span>
+          </div>
+          <h2 class="text-base font-bold text-slate-800 mb-1">3. 신청기한 및 필수 자격요건 체크</h2>
+          <p class="text-xs text-slate-500 mb-4">중도인출 가능 여부 및 세법상 저율 분리과세 요건 충족 여부를 실시간으로 판정합니다.</p>
+          
+          <div id="eligibility-questions-container" class="space-y-3">
+            <!-- Dynamically populated by JS -->
+          </div>
+        </div>
+
+        <!-- Step 4: 세부 케이스 및 예외 상황 선택 -->
+        <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-5" id="step4-box">
+          <div class="flex items-center justify-between mb-3">
+            <span class="text-xs font-bold uppercase tracking-wider text-indigo-600 bg-indigo-50 px-2.5 py-1 rounded-md">Step 4 · 세부 조건 및 추가서류</span>
+            <span class="text-xs text-indigo-600 font-semibold">복수 선택 가능 (클릭하여 체크/해제)</span>
+          </div>
+          <h2 class="text-base font-bold text-slate-800 mb-1">4. 세부 계약유형 및 예외 케이스 선택</h2>
+          <p class="text-xs text-slate-500 mb-4">고객의 상황에 맞는 항목을 클릭하면 우측 징구서류 목록에 추가서류 및 사후관리 안내가 즉시 반영됩니다.</p>
+
+          <div id="subconditions-container" class="space-y-4">
+            <!-- Dynamically populated by JS -->
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Right Column: Real-Time Output Checklist & Validation Panel (5 cols) -->
+      <div class="lg:col-span-5 lg:sticky lg:top-24 space-y-4 print-full">
+        
+        <div class="bg-white rounded-2xl shadow-md border border-slate-200 overflow-hidden">
+          <!-- Status Banner -->
+          <div id="status-banner" class="bg-blue-600 text-white px-5 py-4 flex items-center justify-between">
+            <div>
+              <span class="text-xs font-semibold uppercase tracking-wider opacity-85" id="status-badge">심사 결과 : 신청 가능</span>
+              <h3 class="text-lg font-bold mt-0.5" id="result-title">무주택자의 주택 구입</h3>
+            </div>
+            <div class="flex items-center gap-2 no-print">
+              <button type="button" onclick="copyChecklist()" class="bg-white/15 hover:bg-white/25 text-white text-xs font-semibold px-3 py-1.5 rounded-lg backdrop-blur-sm transition flex items-center gap-1" title="서류 목록 텍스트 복사">
+                <span>📄 복사</span>
+              </button>
+              <button type="button" onclick="window.print()" class="bg-white/15 hover:bg-white/25 text-white text-xs font-semibold px-3 py-1.5 rounded-lg backdrop-blur-sm transition flex items-center gap-1" title="인쇄하기">
+                <span>🖨️ 인쇄</span>
+              </button>
+            </div>
+          </div>
+
+          <div class="p-5 space-y-5 max-h-[calc(100vh-180px)] overflow-y-auto custom-scroll">
+            
+            <!-- Rejection Alert Box (Hidden by default) -->
+            <div id="rejection-alert" class="hidden bg-red-50 border-l-4 border-red-600 p-4 rounded-r-xl">
+              <div class="flex items-start gap-3">
+                <span class="text-red-600 text-xl leading-none">🚫</span>
+                <div>
+                  <h4 class="text-sm font-bold text-red-900">중도인출 신청 불가 판정</h4>
+                  <ul id="rejection-reasons-list" class="text-xs text-red-700 mt-1.5 space-y-1 list-disc list-inside"></ul>
+                </div>
+              </div>
+            </div>
+
+            <!-- Tax Treatment Box (항상 모든 사유에서 저율과세/일반과세 상세 표시) -->
+            <div id="tax-treatment-box" class="bg-slate-50 border border-slate-200 rounded-xl p-3.5">
+              <!-- Populated by JS -->
+            </div>
+
+            <!-- Application Period Info -->
+            <div class="bg-slate-50 border border-slate-200 rounded-xl p-3.5">
+              <div class="flex items-center justify-between text-xs font-bold text-slate-600 mb-1">
+                <span>⏰ 신청 가능 시기 (기한)</span>
+                <span id="limit-badge" class="text-blue-600 font-semibold"></span>
+              </div>
+              <p id="period-text" class="text-xs text-slate-800 font-medium leading-relaxed"></p>
+            </div>
+
+            <!-- Required Documents List -->
+            <div>
+              <div class="flex items-center justify-between mb-2.5">
+                <h4 class="text-sm font-bold text-slate-900 flex items-center gap-1.5">
+                  <span class="w-2 h-2 rounded-full bg-blue-600"></span>
+                  필수 징구서류 <span id="req-count" class="text-xs font-semibold text-blue-600 bg-blue-50 px-2 py-0.5 rounded-full">0건</span>
+                </h4>
+                <span class="text-[11px] text-slate-400">서류 클릭 시 구비 완료 체크</span>
+              </div>
+              <div id="required-docs-list" class="space-y-2.5">
+                <!-- Populated by JS -->
+              </div>
+            </div>
+
+            <!-- Conditional / Additional Documents List -->
+            <div id="additional-docs-section" class="hidden pt-2 border-t border-slate-100">
+              <div class="flex items-center justify-between mb-2.5">
+                <h4 class="text-sm font-bold text-indigo-900 flex items-center gap-1.5">
+                  <span class="w-2 h-2 rounded-full bg-indigo-600"></span>
+                  케이스별 추가 징구서류 <span id="add-count" class="text-xs font-semibold text-indigo-600 bg-indigo-50 px-2 py-0.5 rounded-full">0건</span>
+                </h4>
+                <span class="text-[11px] text-indigo-600 font-medium">Step 4 선택 항목 반영</span>
+              </div>
+              <div id="additional-docs-list" class="space-y-2.5">
+                <!-- Populated by JS -->
+              </div>
+            </div>
+
+            <!-- Post-Verification (사후확인) Alert -->
+            <div id="post-check-alert" class="hidden bg-amber-50 border border-amber-300 rounded-xl p-3.5">
+              <div class="flex items-start gap-2.5">
+                <span class="text-amber-600 text-base">⚠️</span>
+                <div>
+                  <h5 class="text-xs font-bold text-amber-900">사후관리 (Post-Check) 필수 대상</h5>
+                  <ul id="post-check-list" class="text-xs text-amber-800 mt-1 space-y-1 list-disc list-inside"></ul>
+                </div>
+              </div>
+            </div>
+
+            <!-- Common Payout & Legal Rules -->
+            <div class="bg-slate-900 text-slate-200 rounded-xl p-4 text-xs space-y-2">
+              <div class="font-bold text-white flex items-center justify-between">
+                <span class="flex items-center gap-1.5">📌 공통 지급 원칙 및 법정 인출 순서</span>
+                <span class="text-[10px] bg-emerald-500/20 text-emerald-300 border border-emerald-400/30 px-2 py-0.5 rounded">절세 핵심</span>
+              </div>
+              <ul class="space-y-1 text-slate-300 text-[11px] leading-relaxed">
+                <li>• <strong>지급계좌 제한</strong>: IRP 수령 불가, 반드시 <strong>가입자 본인명의 일반 계좌</strong>로만 신청 가능 (송금위임 요청 불가)</li>
+                <li>• <strong>법정 인출 순서 (DC·IRP 공통)</strong>:<br/>
+                  <span class="text-emerald-300 font-semibold">① 과세제외금액(세액공제 안 받은 본인부담금: 세금 0%)</span> → <span class="text-blue-300">② 이연퇴직소득·회사부담금</span> → <span class="text-amber-300">③ 세액공제 받은 본인부담금 및 운용수익</span> 순으로 인출</li>
+                <li>• <strong>서류 발급기한</strong>: 주민등록등·초본/가족관계/소득서류 <strong>3개월</strong>, 등기부등본/건축물대장/사건검색 <strong>1개월</strong>, 진단서 <strong>6개월</strong> 이내</li>
+              </ul>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ==========================================
+         TAB 2: 부득이한 인출 과세 비교표
+         ========================================== -->
+    <section id="section-taxguide" class="hidden space-y-6">
+      <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-5 border-b border-slate-100">
+          <div>
+            <span class="text-xs font-bold uppercase tracking-wider text-emerald-700 bg-emerald-50 px-2.5 py-1 rounded-md">소득세법 시행령 제20조의2 & 근로자퇴직급여 보장법</span>
+            <h2 class="text-xl font-bold text-slate-900 mt-1">DC형 & 개인형IRP 중도인출 사유별 저율 분리과세 비교표</h2>
+            <p class="text-xs text-slate-500 mt-1">DC형과 IRP 모두 근로자퇴직급여 보장법상 중도인출 제도와 소득세법상 연금계좌 과세 체계를 동일하게 적용받습니다.</p>
+          </div>
+          <button type="button" onclick="openWizardWith('IRP_SPECIAL', 'IRP_SPEC_MED')" class="self-start md:self-auto bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold px-4 py-2.5 rounded-xl shadow transition">
+            👉 IRP 부득이한 인출(비정기연금/해지) 바로가기
+          </button>
+        </div>
+
+        <!-- 1. 중도인출 사유별 과세 비교표 -->
+        <div class="mt-6">
+          <h3 class="text-base font-bold text-slate-800 mb-3 flex items-center gap-2">
+            <span class="w-6 h-6 rounded-lg bg-slate-900 text-white text-xs flex items-center justify-center font-bold">1</span>
+            중도인출 사유별 과세 비교 (DC형 & IRP 공통)
+          </h3>
+          <div class="overflow-x-auto rounded-xl border border-slate-200">
+            <table class="w-full text-left border-collapse text-xs">
+              <thead>
+                <tr class="bg-slate-800 text-white">
+                  <th class="py-3 px-4 font-bold">퇴직급여법상 중도인출 사유</th>
+                  <th class="py-3 px-4 font-bold">세법상 부득이한 인출 인정 여부</th>
+                  <th class="py-3 px-4 font-bold">회사 부담금(DC) 및 이연퇴직소득(IRP)</th>
+                  <th class="py-3 px-4 font-bold">개인 추가납입분(세액공제분) 및 운용수익</th>
+                  <th class="py-3 px-4 font-bold text-center">저율과세 인출한도</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-slate-200 bg-white">
+                <tr class="bg-emerald-50/40 hover:bg-emerald-50/80">
+                  <td class="py-3 px-4 font-bold text-slate-900">1. 6개월 이상 요양 의료비<br/><span class="text-[11px] font-normal text-slate-500">(DC는 연간 임금총액 12.5% 초과 요건 / IRP 해지·비정기연금은 3개월 이상 요양)</span></td>
+                  <td class="py-3 px-4"><span class="bg-emerald-600 text-white font-bold px-2 py-0.5 rounded text-[11px]">인정 (저율 분리과세)</span></td>
+                  <td class="py-3 px-4 font-semibold text-emerald-900">퇴직소득세의 70% <span class="text-[11px] font-normal text-slate-600">(연금소득세)</span></td>
+                  <td class="py-3 px-4 font-semibold text-emerald-900">연금소득세 3.3% ~ 5.5% <span class="text-[11px] font-normal text-slate-600">(분리과세)</span></td>
+                  <td class="py-3 px-4 text-center"><span class="text-amber-700 font-bold">산식 한도 적용</span></td>
+                </tr>
+                <tr class="bg-emerald-50/40 hover:bg-emerald-50/80">
+                  <td class="py-3 px-4 font-bold text-slate-900">2. 개인회생절차 개시 결정 (5년 내)</td>
+                  <td class="py-3 px-4"><span class="bg-emerald-600 text-white font-bold px-2 py-0.5 rounded text-[11px]">인정 (저율 분리과세)</span></td>
+                  <td class="py-3 px-4 font-semibold text-emerald-900">퇴직소득세의 70% <span class="text-[11px] font-normal text-slate-600">(연금소득세)</span></td>
+                  <td class="py-3 px-4 font-semibold text-emerald-900">연금소득세 3.3% ~ 5.5% <span class="text-[11px] font-normal text-slate-600">(분리과세)</span></td>
+                  <td class="py-3 px-4 text-center font-semibold text-emerald-700">한도 없음 (전액)</td>
+                </tr>
+                <tr class="bg-emerald-50/40 hover:bg-emerald-50/80">
+                  <td class="py-3 px-4 font-bold text-slate-900">3. 파산선고 (5년 내)</td>
+                  <td class="py-3 px-4"><span class="bg-emerald-600 text-white font-bold px-2 py-0.5 rounded text-[11px]">인정 (저율 분리과세)</span></td>
+                  <td class="py-3 px-4 font-semibold text-emerald-900">퇴직소득세의 70% <span class="text-[11px] font-normal text-slate-600">(연금소득세)</span></td>
+                  <td class="py-3 px-4 font-semibold text-emerald-900">연금소득세 3.3% ~ 5.5% <span class="text-[11px] font-normal text-slate-600">(분리과세)</span></td>
+                  <td class="py-3 px-4 text-center font-semibold text-emerald-700">한도 없음 (전액)</td>
+                </tr>
+                <tr class="bg-emerald-50/40 hover:bg-emerald-50/80">
+                  <td class="py-3 px-4 font-bold text-slate-900">4. 재난 피해 (천재지변 / 15일 이상 입원)<br/><span class="text-[11px] font-normal text-emerald-700">※ 자연재해 또는 사회재난 인적 피해</span></td>
+                  <td class="py-3 px-4"><span class="bg-emerald-600 text-white font-bold px-2 py-0.5 rounded text-[11px]">인정 (저율 분리과세)</span></td>
+                  <td class="py-3 px-4 font-semibold text-emerald-900">퇴직소득세의 70% <span class="text-[11px] font-normal text-slate-600">(연금소득세)</span></td>
+                  <td class="py-3 px-4 font-semibold text-emerald-900">연금소득세 3.3% ~ 5.5% <span class="text-[11px] font-normal text-slate-600">(분리과세)</span></td>
+                  <td class="py-3 px-4 text-center"><span class="text-amber-700 font-bold">입원은 산식 한도</span><br/><span class="text-[10px] text-slate-500">(천재지변은 한도 없음)</span></td>
+                </tr>
+                <tr class="bg-rose-50/40 hover:bg-rose-50/70">
+                  <td class="py-3 px-4 font-bold text-slate-900">4-1. 재난 피해 (주거시설 침수·파손 등 단순 물적 피해)</td>
+                  <td class="py-3 px-4"><span class="bg-rose-600 text-white font-bold px-2 py-0.5 rounded text-[11px]">불인정 (일반 과세)</span></td>
+                  <td class="py-3 px-4 font-semibold text-rose-900">퇴직소득세 100%</td>
+                  <td class="py-3 px-4 font-semibold text-rose-900">기타소득세 16.5% <span class="text-[11px] font-normal text-slate-600">(분리과세)</span></td>
+                  <td class="py-3 px-4 text-center text-slate-400">해당 없음</td>
+                </tr>
+                <tr class="hover:bg-slate-50">
+                  <td class="py-3 px-4 font-bold text-slate-900">5. 무주택자의 본인 명의 주택 구입</td>
+                  <td class="py-3 px-4"><span class="bg-slate-200 text-slate-700 font-bold px-2 py-0.5 rounded text-[11px]">불인정 (일반 과세)</span></td>
+                  <td class="py-3 px-4 font-semibold text-slate-800">퇴직소득세 100%</td>
+                  <td class="py-3 px-4 font-semibold text-slate-800">기타소득세 16.5% <span class="text-[11px] font-normal text-slate-600">(분리과세)</span></td>
+                  <td class="py-3 px-4 text-center text-slate-400">해당 없음</td>
+                </tr>
+                <tr class="hover:bg-slate-50">
+                  <td class="py-3 px-4 font-bold text-slate-900">6. 무주택자의 전세금·임차보증금</td>
+                  <td class="py-3 px-4"><span class="bg-slate-200 text-slate-700 font-bold px-2 py-0.5 rounded text-[11px]">불인정 (일반 과세)</span></td>
+                  <td class="py-3 px-4 font-semibold text-slate-800">퇴직소득세 100%</td>
+                  <td class="py-3 px-4 font-semibold text-slate-800">기타소득세 16.5% <span class="text-[11px] font-normal text-slate-600">(분리과세)</span></td>
+                  <td class="py-3 px-4 text-center text-slate-400">해당 없음</td>
+                </tr>
+                <tr class="hover:bg-slate-50">
+                  <td class="py-3 px-4 font-bold text-slate-900">7. 임금피크제·근로시간 단축 (DC 한정)</td>
+                  <td class="py-3 px-4"><span class="bg-slate-200 text-slate-700 font-bold px-2 py-0.5 rounded text-[11px]">불인정 (일반 과세)</span></td>
+                  <td class="py-3 px-4 font-semibold text-slate-800">퇴직소득세 100%</td>
+                  <td class="py-3 px-4 font-semibold text-slate-800">기타소득세 16.5% <span class="text-[11px] font-normal text-slate-600">(분리과세)</span></td>
+                  <td class="py-3 px-4 text-center text-slate-400">해당 없음</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- 2. 재원별 작동 원리 & 3. 산식 및 실무 체크사항 -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-6">
+          <div class="bg-slate-50 rounded-xl p-5 border border-slate-200 space-y-3">
+            <h3 class="text-sm font-bold text-slate-900 flex items-center gap-2">
+              <span class="w-5 h-5 rounded bg-blue-600 text-white text-xs flex items-center justify-center font-bold">2</span>
+              DC형과 IRP의 재원별 저율 분리과세 작동 원리
+            </h3>
+            <div class="bg-white p-3.5 rounded-lg border border-slate-200 space-y-1.5 text-xs">
+              <div class="font-bold text-blue-900">① 회사 부담금(DC 주력 재원) 및 퇴직금 원금(IRP 이연퇴직소득)</div>
+              <p class="text-slate-600 leading-relaxed">• <strong>원칙 (일반 인출)</strong>: 중간정산 퇴직으로 보아 산출된 <strong>퇴직소득세 100%</strong> 납부</p>
+              <p class="text-slate-800 leading-relaxed">• <strong>저율 과세 적용 시</strong>: 산출된 퇴직소득세의 30%를 감면하여 <strong>퇴직소득세의 70%</strong>를 연금소득세로 분리과세 <span class="text-blue-700 font-medium">(단, DC 회사부담금이 만든 '운용수익'은 ②번 항목으로 분류되어 3.3%~5.5% 적용)</span></p>
+            </div>
+            <div class="bg-white p-3.5 rounded-lg border border-slate-200 space-y-1.5 text-xs">
+              <div class="font-bold text-indigo-900">② 운용수익(DC·IRP 공통) 및 세액공제 받은 개인 추가납입금</div>
+              <p class="text-slate-600 leading-relaxed">• <strong>원칙 (일반 인출)</strong>: 연금 외 수령으로 보아 <strong>16.5% 기타소득세</strong> 부과</p>
+              <p class="text-slate-800 leading-relaxed">• <strong>저율 과세 적용 시</strong>: 연령별 연금소득세율(<strong>만 70세 미만 5.5%, 70~79세 4.4%, 80세 이상 3.3%</strong>, 지방소득세 포함)로 저율 분리과세</p>
+              <p class="text-emerald-700 font-semibold leading-relaxed">• <strong>연 1,500만 원 한도 제한 없음</strong>: 부득이한 인출 금액은 연간 1,500만 원 사적연금 분리과세 한도 계산에서 아예 제외되어 인출액이 아무리 커도 무조건 3.3~5.5% 분리과세로 종결</p>
+            </div>
+          </div>
+
+          <div class="bg-slate-50 rounded-xl p-5 border border-slate-200 space-y-3">
+            <h3 class="text-sm font-bold text-slate-900 flex items-center gap-2">
+              <span class="w-5 h-5 rounded bg-emerald-600 text-white text-xs flex items-center justify-center font-bold">3</span>
+              세법상 저율 과세 한도 산식 & 실무 필수 체크사항
+            </h3>
+            <div class="bg-emerald-900 text-white p-4 rounded-xl space-y-2">
+              <div class="text-xs font-bold text-emerald-300">📌 장기요양(DC·IRP 6개월 / IRP 해지·비정기 3개월) & 재난 15일 입원 한도 산식</div>
+              <div class="text-sm font-extrabold bg-slate-950/50 p-3 rounded-lg border border-emerald-500/30 text-center tracking-tight">
+                저율 과세 한도 = 실제 의료비 + 간병인 비용 + (요양 개월 수 × 150만 원) - 200만 원
+              </div>
+              <p class="text-[11px] text-emerald-200 leading-relaxed">
+                ※ 위 산식으로 계산된 금액까지만 저율 분리과세(퇴직소득세 70% / 연금소득세 3.3~5.5%)가 적용되며, 개인회생·파산선고·천재지변은 한도 제한 없이 전액 저율 과세됩니다.
+              </p>
+            </div>
+            <div class="bg-white p-3.5 rounded-lg border border-slate-200 space-y-2 text-xs">
+              <div class="font-bold text-slate-900">✅ 실무상 필수 체크사항 2가지</div>
+              <p class="text-slate-700 leading-relaxed">
+                1. <strong>사유 확인일로부터 6개월 이내 신청 필수</strong>: 요양 필요 진단일, 회생·파산 결정일, 재난 발생일 등 사유가 확인된 날로부터 <strong>6개월 이내</strong>에 금융기관에 증빙서류를 제출하고 인출을 신청해야 세법상 저율 과세가 적용됩니다.
+              </p>
+              <p class="text-slate-700 leading-relaxed">
+                2. <strong>법정 인출 순서에 따른 절세 효과</strong>: 일부 금액 인출 시 <strong>① 과세제외금액(세액공제 안 받은 본인부담금: 비과세 0%) → ② 이연퇴직소득·회사부담금 → ③ 세액공제 본인부담금 및 운용수익</strong> 순으로 인출됩니다.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==========================================
+         TAB 3: 인터랙티브 순서도 (Flowchart View)
+         ========================================== -->
+    <section id="section-flowchart" class="hidden space-y-6">
+      
+      <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-5 border-b border-slate-100">
+          <div>
+            <span class="text-xs font-bold uppercase tracking-wider text-blue-600 bg-blue-50 px-2.5 py-1 rounded-md">System Architecture</span>
+            <h2 class="text-xl font-bold text-slate-900 mt-1">중도인출 의사결정 & 저율 분리과세 판정 순서도</h2>
+            <p class="text-xs text-slate-500 mt-0.5">사유별 탭을 클릭하여 세부 분기 로직을 확인하고, 노드를 클릭하면 마법사 화면으로 즉시 이동합니다.</p>
+          </div>
+          <!-- Flowchart Selector Pills -->
+          <div class="flex flex-wrap gap-1.5 bg-slate-100 p-1.5 rounded-xl">
+            <button type="button" onclick="renderFlowchart('MAIN')" id="fc-btn-MAIN" class="px-3 py-1.5 rounded-lg text-xs font-bold bg-slate-900 text-white shadow-sm transition">전체 메인 구조</button>
+            <button type="button" onclick="renderFlowchart('HOUSE_BUY')" id="fc-btn-HOUSE_BUY" class="px-3 py-1.5 rounded-lg text-xs font-bold text-slate-600 hover:bg-white transition">① 주택구입</button>
+            <button type="button" onclick="renderFlowchart('HOUSE_RENT')" id="fc-btn-HOUSE_RENT" class="px-3 py-1.5 rounded-lg text-xs font-bold text-slate-600 hover:bg-white transition">② 전/월세보증금</button>
+            <button type="button" onclick="renderFlowchart('MEDICAL')" id="fc-btn-MEDICAL" class="px-3 py-1.5 rounded-lg text-xs font-bold text-slate-600 hover:bg-white transition">③ 6개월 요양</button>
+            <button type="button" onclick="renderFlowchart('LEGAL_DISASTER')" id="fc-btn-LEGAL_DISASTER" class="px-3 py-1.5 rounded-lg text-xs font-bold text-slate-600 hover:bg-white transition">④ 회생/파산 & ⑤ 재난</button>
+            <button type="button" onclick="renderFlowchart('IRP_SPECIAL')" id="fc-btn-IRP_SPECIAL" class="px-3 py-1.5 rounded-lg text-xs font-bold text-emerald-700 hover:bg-white transition">⚖️ IRP 부득이한 인출 & 저율과세</button>
+          </div>
+        </div>
+
+        <!-- Flowchart Canvas Container -->
+        <div id="flowchart-canvas" class="mt-6 overflow-x-auto custom-scroll pb-4">
+          <!-- Dynamically rendered visual flowchart -->
+        </div>
+      </div>
+
+    </section>
+
+    <!-- ==========================================
+         TAB 4: 요양 인출한도 및 12.5% 임금비율 계산기
+         ========================================== -->
+    <section id="section-calculator" class="hidden space-y-6">
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        
+        <!-- Calculator 1: 퇴직급여법상 6개월 이상 요양 (12.5% 검증 & 법정 인출한도) -->
+        <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
+          <span class="text-xs font-bold uppercase tracking-wider text-blue-600 bg-blue-50 px-2.5 py-1 rounded-md">근로자퇴직급여 보장법 기준</span>
+          <h3 class="text-lg font-bold text-slate-900 mt-2">1. 6개월 이상 요양 인출 가능 여부(12.5%) 계산기</h3>
+          <p class="text-xs text-slate-500 mt-1 mb-5">DC형 가입자의 연간임금총액 대비 의료비 부담률(12.5% 초과 여부)과 중도인출 가능 한도를 계산합니다.</p>
+
+          <div class="space-y-4">
+            <div class="grid grid-cols-2 gap-3">
+              <div>
+                <label class="block text-xs font-bold text-slate-700 mb-1">가입 제도</label>
+                <select id="calc-plan" onchange="runMedicalCalc()" class="w-full rounded-xl border border-slate-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+                  <option value="DC">DC형 (12.5% 초과 필수)</option>
+                  <option value="IRP">개인형IRP (소득요건 없음)</option>
+                </select>
+              </div>
+              <div>
+                <label class="block text-xs font-bold text-slate-700 mb-1">근속 기간 (DC만 해당)</label>
+                <select id="calc-tenure" onchange="runMedicalCalc()" class="w-full rounded-xl border border-slate-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+                  <option value="OVER1">재직 1년 이상</option>
+                  <option value="UNDER1">재직 1년 미만 (수급자격 Y)</option>
+                </select>
+              </div>
+            </div>
+
+            <!-- Wage Inputs (Over 1yr) -->
+            <div id="wage-over1-box" class="grid grid-cols-1 sm:grid-cols-2 gap-3 bg-slate-50 p-3.5 rounded-xl border border-slate-200">
+              <div>
+                <label class="block text-xs font-semibold text-slate-700 mb-1">전년도 연간임금총액 (원)</label>
+                <input type="number" id="calc-prev-wage" value="48000000" oninput="runMedicalCalc()" class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm font-semibold" placeholder="예: 48000000" />
+                <span class="text-[11px] text-slate-400">원천징수영수증 / 보수총액신고서</span>
+              </div>
+              <div>
+                <label class="block text-xs font-semibold text-slate-700 mb-1">신청일 직전 1년간 임금총액 (원)</label>
+                <input type="number" id="calc-recent-wage" value="45000000" oninput="runMedicalCalc()" class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm font-semibold" placeholder="더 낮을 경우 입력" />
+                <span class="text-[11px] text-blue-600 font-medium">※ 둘 중 더 낮은 금액 자동 적용 (min)</span>
+              </div>
+            </div>
+
+            <!-- Wage Inputs (Under 1yr) -->
+            <div id="wage-under1-box" class="hidden bg-slate-50 p-3.5 rounded-xl border border-slate-200">
+              <label class="block text-xs font-semibold text-slate-700 mb-1">재직 중 월평균 급여액 (원)</label>
+              <input type="number" id="calc-monthly-wage" value="3500000" oninput="runMedicalCalc()" class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm font-semibold" />
+              <span class="text-[11px] text-slate-500">연간임금총액 = 월평균 급여액 × 12개월로 자동 환산</span>
+            </div>
+
+            <!-- Medical Expense Inputs -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <div>
+                <label class="block text-xs font-bold text-slate-700 mb-1">① 직전 1년간 지출한 의료비 (원)</label>
+                <input type="number" id="calc-med-paid" value="5000000" oninput="runMedicalCalc()" class="w-full rounded-xl border border-slate-300 px-3 py-2 text-sm font-semibold" />
+                <span class="text-[11px] text-slate-400">진료비/약제비 영수증, 장기요양명세서</span>
+              </div>
+              <div>
+                <label class="block text-xs font-bold text-slate-700 mb-1">② 지출 예정이 확정된 의료비 (원)</label>
+                <input type="number" id="calc-med-scheduled" value="1500000" oninput="runMedicalCalc()" class="w-full rounded-xl border border-slate-300 px-3 py-2 text-sm font-semibold" />
+                <span class="text-[11px] text-slate-400">1개월 내 발급된 병원 청구서/보장구 견적서</span>
+              </div>
+            </div>
+
+            <!-- Calculation Output -->
+            <div id="calc-result-box" class="rounded-2xl p-5 border-2 border-blue-200 bg-blue-50/60 space-y-3 mt-4">
+              <div class="flex items-center justify-between border-b border-blue-200/70 pb-3">
+                <span class="text-xs font-bold text-slate-600">판정 결과 (퇴직급여법상 인출 요건)</span>
+                <span id="calc-verdict-badge" class="px-3 py-1 rounded-full text-xs font-extrabold bg-blue-600 text-white">중도인출 가능 (12.5% 초과)</span>
+              </div>
+              <div class="grid grid-cols-2 gap-3 text-xs">
+                <div class="bg-white p-3 rounded-xl border border-slate-200">
+                  <div class="text-slate-400">적용 연간임금총액 (A)</div>
+                  <div id="calc-out-wage" class="text-sm font-bold text-slate-800 mt-0.5">45,000,000 원</div>
+                  <div id="calc-out-threshold" class="text-[11px] text-blue-600 mt-0.5">12.5% 기준선: 5,625,000 원</div>
+                </div>
+                <div class="bg-white p-3 rounded-xl border border-slate-200">
+                  <div class="text-slate-400">총 의료비 증빙액 (B = ①+②)</div>
+                  <div id="calc-out-med" class="text-sm font-bold text-slate-800 mt-0.5">6,500,000 원</div>
+                  <div id="calc-out-ratio" class="text-[11px] text-emerald-600 font-semibold mt-0.5">임금 대비 비율: 14.44%</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Calculator 2: 소득세법 시행령 제20조의2 저율 분리과세 한도 계산기 -->
+        <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
+          <span class="text-xs font-bold uppercase tracking-wider text-emerald-700 bg-emerald-50 px-2.5 py-1 rounded-md">소득세법 시행령 제20조의2 (DC·IRP 공통)</span>
+          <h3 class="text-lg font-bold text-slate-900 mt-2">2. 부득이한 인출(요양 / 15일 입원) 저율 과세 한도 계산기</h3>
+          <p class="text-xs text-slate-500 mt-1 mb-5">장기 요양(DC·IRP 6개월 / IRP 해지·비정기 3개월) 또는 재난 15일 이상 입원 시, 저율 분리과세(퇴직소득세 70% & 연금소득세 3.3~5.5%)가 인정되는 세법상 한도를 계산합니다.</p>
+
+          <div class="space-y-4">
+            <div>
+              <label class="block text-xs font-bold text-slate-700 mb-1">실제 부담한 의료비 (원)</label>
+              <input type="number" id="irp-med-cost" value="6500000" oninput="runIrpSpecialCalc()" class="w-full rounded-xl border border-slate-300 px-3 py-2 text-sm font-semibold" />
+              <span class="text-[11px] text-slate-400">진료비영수증 등 실제 지출 의료비</span>
+            </div>
+
+            <div>
+              <label class="block text-xs font-bold text-slate-700 mb-1">간병인 비용 (원)</label>
+              <input type="number" id="irp-care-cost" value="2000000" oninput="runIrpSpecialCalc()" class="w-full rounded-xl border border-slate-300 px-3 py-2 text-sm font-semibold" />
+              <span class="text-[11px] text-slate-400">간병료영수증 (간병인의 성명, 생년월일 등 인적사항 기재 필수)</span>
+            </div>
+
+            <div class="grid grid-cols-2 gap-3">
+              <div>
+                <label class="block text-xs font-bold text-slate-700 mb-1">요양(입원) 개월 수 (개월)</label>
+                <input type="number" id="irp-leave-months" value="6" min="0" oninput="runIrpSpecialCalc()" class="w-full rounded-xl border border-slate-300 px-3 py-2 text-sm font-semibold" />
+                <span class="text-[11px] text-slate-500">요양 개월 수 × 150만 원 가산</span>
+              </div>
+              <div>
+                <label class="block text-xs font-bold text-slate-700 mb-1">가입자 연령대 (세율 확인용)</label>
+                <select id="irp-age-rate" onchange="runIrpSpecialCalc()" class="w-full rounded-xl border border-slate-300 px-3 py-2 text-sm font-semibold">
+                  <option value="5.5">만 70세 미만 (5.5%)</option>
+                  <option value="4.4">만 70세 ~ 79세 (4.4%)</option>
+                  <option value="3.3">만 80세 이상 (3.3%)</option>
+                </select>
+                <span class="text-[11px] text-slate-400">운용수익·세액공제분 적용 세율</span>
+              </div>
+            </div>
+
+            <div class="rounded-2xl p-5 border-2 border-emerald-200 bg-emerald-50/60 space-y-3 mt-4">
+              <div class="text-xs font-bold text-emerald-950">세법상 저율 분리과세 적용 한도 산식</div>
+              <div class="text-xs text-emerald-900 bg-white p-3 rounded-xl border border-emerald-200 font-semibold">
+                실제 의료비 + 간병인 비용 + (요양 개월 수 × 150만 원) - 200만 원
+              </div>
+              <div class="pt-1 flex items-baseline justify-between">
+                <span class="text-xs font-bold text-emerald-900">최종 저율 분리과세 인정 한도</span>
+                <span id="irp-out-limit" class="text-xl font-extrabold text-emerald-700">15,500,000 원</span>
+              </div>
+              <div id="irp-rate-summary" class="text-[11px] text-slate-700 bg-white/80 p-2.5 rounded-lg border border-emerald-200 leading-relaxed">
+                • <strong>회사부담금(DC) / 이연퇴직소득(IRP)</strong>: 산출 퇴직소득세의 <strong>70%</strong> 연금소득세 분리과세<br/>
+                • <strong>운용수익 / 세액공제 본인부담금</strong>: <strong>5.5%</strong> 연금소득세 분리과세 (연 1,500만원 한도 제외)
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Toast Notification -->
+  <div id="toast" class="fixed bottom-5 right-5 bg-slate-900 text-white text-xs font-semibold px-4 py-3 rounded-xl shadow-lg opacity-0 pointer-events-none transition-opacity duration-300 z-50">
+    클립보드에 서류 목록이 복사되었습니다!
+  </div>
+
+  <!-- Application Logic & Knowledge Base -->
+  <script>
+    const state = {
+      planType: 'DC',           // 'DC' | 'IRP' | 'IRP_SPECIAL'
+      reasonKey: 'HOUSE_BUY',   // Current selected reason ID
+      eligibility: {},          // Key-value map of eligibility answers
+      subType: null,            // Single-choice subtype
+      conditions: new Set(),    // Multi-choice checkboxes for additional documents
+      checkedDocs: new Set()    // Right-panel document completion check state
+    };
+
+    const REASONS_DB = {
+      // =======================================================================
+      // [DC형 & 개인형IRP 법정 중도인출 6대 사유] + 저율과세 정보 상시 통합 표시
+      // =======================================================================
+      HOUSE_BUY: {
+        id: 'HOUSE_BUY',
+        Plans: ['DC', 'IRP'],
+        title: '① 무주택자인 가입자의 주택 구입',
+        shortTitle: '① 주택 구입 (무주택자)',
+        period: '계약체결일 ~ 소유권이전등기접수일 이후 1개월 이내 신청',
+        limitNote: '횟수 제한 없음 (신청일 기준 무주택자)',
+        taxInfo: {
+          recognized: false,
+          badge: '일반 과세 대상 (저율 분리과세 미적용)',
+          employerTax: '퇴직소득세 100% 부과 (DC 회사부담금 / IRP 이연퇴직소득)',
+          profitTax: '기타소득세 16.5% 분리과세 (운용수익 및 세액공제 본인부담금)',
+          note: '근로자퇴직급여 보장법상 적법한 중도인출 사유이나, 소득세법 시행령 제20조의2에 따른 부득이한 인출(저율 분리과세) 대상에는 해당하지 않아 일반 세율이 적용됩니다.'
+        },
+        eligibilityQuestions: [
+          {
+            id: 'inPeriod',
+            label: '계약체결일로부터 소유권이전등기접수일 이후 1개월 이내입니까?',
+            desc: '잔금지급일 경과 후 1개월이 지났더라도 소유권이전등기접수일로부터 1개월 이내이면 예외적으로 신청 가능',
+            rejectMsg: '신청기한(계약체결일 ~ 소유권이전등기접수일 후 1개월 이내)이 경과하여 중도인출이 불가합니다.'
+          },
+          {
+            id: 'isHomeless',
+            label: '신청서 작성일 기준 가입자 본인이 무주택자입니까?',
+            desc: '보유주택 매도 후 매수 시 매도잔금일이 매수잔금일보다 최소 1일 이상 빨라야 함',
+            rejectMsg: '신청일 기준 무주택자가 아닌 경우 중도인출이 불가합니다.'
+          },
+          {
+            id: 'isResidential',
+            label: '매수 대상이 주거용 건물(주택, 아파트 등)이며 정상 매수 거래입니까?',
+            desc: '업무용 오피스텔, 상가, 무허가 건물 매수, 증여/상속으로 인한 소유권 변경은 신청 불가',
+            rejectMsg: '비주거용 건물(업무용 오피스텔·상가), 무허가 건물 매수, 또는 증여·상속 건은 중도인출이 불가합니다.'
+          }
+        ],
+        baseDocs: [
+          {
+            name: '중도인출신청서 및 개인(신용)정보 수집·이용 동의서 (퇴직연금 중도인출용)',
+            validity: '신청일 기준',
+            detail: '중도인출사유, 입사일/최종 중간정산일 명시 필수 · IRP 수령 불가, 본인명의 계좌로만 신청 가능'
+          },
+          {
+            name: '현거주지 주민등록등본',
+            validity: '발급 3개월 이내',
+            detail: '외국인등록증 소지자는 외국인등록사실증명서, 국내거소신고증 소지자는 국내거소신고사실증명서 제출'
+          },
+          {
+            name: '주민등록등본 주소지의 건물등기사항증명서 (또는 건축물대장)',
+            validity: '발급 1개월 이내',
+            detail: '소유주 표시된 건축물대장 대체 가능 · 무허가건물인 경우 토지등기사항증명서(직원 확인 기재) 또는 무허가건물확인원'
+          },
+          {
+            name: '지방세 세목별 과세증명서 (전국자치단체 / 재산세-주택)',
+            validity: '전년~당해년도 (10~12월은 당해년도만 가능)',
+            detail: '지역: 전국자치단체, 세목: 재산세(주택) · 납부사실이 있는 경우 납부지역 및 그 외 전지역(16개 자치단체) 과세증명서 + 해당 주소지 매도계약서 또는 건물등기사항증명서 첨부'
+          }
+        ],
+        subTypesTitle: '주택 구입 방식 (1가지 필수 선택)',
+        subTypes: [
+          {
+            id: 'BUY_SALE',
+            label: '매매 (일반 주택매수)',
+            docs: [
+              {
+                name: '주택 매매계약서 (사본)',
+                validity: '유효 계약분',
+                detail: '주거용 여부 확인 가능할 것 · 가입자 포함한 공동명의 매수 유효 (가족 간 거래 시 매수주택 등기사항증명서상 "매매" 사유로 소유주 변경되었는지 추가 확인)'
+              }
+            ]
+          },
+          {
+            id: 'BUY_PRESALE',
+            label: '분양 (분양권 포함)',
+            docs: [
+              {
+                name: '분양계약서(사본) 또는 공급계약서(사본) 또는 분양권매매계약서(사본)',
+                validity: '잔금일 이전 신청 원칙',
+                detail: '권리의무승계내역 포함 계약서 전체 필요 (전매제한기간 및 해당내용 확인 시 승계내역 생략 가능) · 잔금일 경과 시 분양계약서 및 권리의무승계내역 첨부로 진행'
+              }
+            ]
+          },
+          {
+            id: 'BUY_UNION',
+            label: '주택조합 (지역/직장)',
+            docs: [
+              {
+                name: '조합공급계약서 (사본)',
+                validity: '유효 계약분',
+                detail: '공급계약서 없이 동호수 지정된 가입계약서만 있는 경우, 계약금 & 중도금 납입영수증 추가 증빙 필수'
+              }
+            ]
+          },
+          {
+            id: 'BUY_BUILD',
+            label: '신축 (공사/직접신축)',
+            docs: [
+              {
+                name: '공사계약서(사본) + 건축허가서 또는 착공신고필증',
+                validity: '건축기간 확인',
+                detail: '본인 직접 신축 시 착공신고필증만 가능(주거용 및 건축기간 확인) · 건축기간 미기재 시 착공신고일이 최근이며 자재/장비구입 최근 영수증 증빙(건별 판단)'
+              }
+            ]
+          },
+          {
+            id: 'BUY_AUCTION',
+            label: '경매 / 공매 낙찰',
+            docs: [
+              {
+                name: '입찰보증금 입금영수증(사본) [보증보험증권 대체 가능]',
+                validity: '유효 발급분',
+                detail: '입찰보증금 납부 사실 확인용'
+              },
+              {
+                name: '경매/공매 사건 검색 인터넷 발급본',
+                validity: '최근 발급분',
+                detail: '법원 경매 또는 온비드 공매 사건 내역 확인'
+              },
+              {
+                name: '[경매] 대금지급기한통지서(사본) / [공매] 매각결정통지서(사본)',
+                validity: '유효 발급분',
+                detail: '경매/공매 구분에 맞춰 해당 통지서 사본 제출'
+              }
+            ]
+          }
+        ],
+        conditions: [
+          {
+            id: 'COND_NO_BROKER',
+            label: '중개인 없는 계약 (개인 간 직거래 / 분양 공급자 거래)',
+            docs: [
+              {
+                name: '계약금 입금확인증(사본) 또는 영수증(사본)',
+                validity: '수령 확인분',
+                detail: '계약서상 영수인 유효 (매도인 수령여부 확인 가능할 것, 분양계약은 공급자의 영수인 유효)'
+              }
+            ]
+          },
+          {
+            id: 'COND_AFTER_BALANCE',
+            label: '잔금지급일(입주예정일) 경과 후 등기접수일로부터 1개월 이내 신청 시',
+            docs: [
+              {
+                name: '매수 주택의 건물등기사항증명서 (상황별 대체서류 포함)',
+                validity: '발급 1개월 이내',
+                detail: '소유권이전등기접수일로부터 1개월 이내 확인 · 입주예정일 지났으나 잔금 미납 시 [잔금미납확인서] 징구 · 구분등기 전이면 [시공사/분양사무소 구분등기 전 확인서류 또는 시공사 소유 확인 등기] 추가'
+              }
+            ]
+          },
+          {
+            id: 'COND_SAME_ADDR',
+            label: '매수주택 주소와 주민등록등본상 현 거주지가 동일한 경우 (기전입 등)',
+            docs: [
+              {
+                name: '주민등록초본 (과거 주소변동 이력 포함)',
+                validity: '발급 3개월 이내',
+                detail: '거주 중인 주택을 매수한 경우로서 전입 1년 이상이면 초본 및 직전주소 등기 생략 가능'
+              },
+              {
+                name: '초본상 직전주소 기준 건물등기사항증명서',
+                validity: '발급 1개월 이내',
+                detail: '매수주택으로 이미 전입신고를 완료한 경우 직전 주소지의 무주택 여부 확인용'
+              }
+            ]
+          },
+          {
+            id: 'COND_SOLD_PREV',
+            label: '보유주택 매도 후 주택 매수 (또는 재산세 과세내역이 존재하는 경우)',
+            docs: [
+              {
+                name: '기존 주택 매도계약서 또는 소유권이전등기 확인되는 건물등기사항증명서(건축물대장)',
+                validity: '발급 1개월 이내',
+                detail: '기존 주택 매도일(잔금/소유권변경/등기접수일)이 신규 주택 매수 잔금일보다 최소 1일 이상 빨라야 함 (계약일이 아닌 잔금일 기준)'
+              }
+            ]
+          },
+          {
+            id: 'COND_SPOUSE_JOINT',
+            label: '배우자 명의 계약 체결 후 소유권 공동명의 등기(예정) 시',
+            postCheck: '주택 [매매]의 경우 가입자 본인 공동명의 등기 여부를 사후에 반드시 확인해야 합니다. (분양/신축은 사후확인 불필요)',
+            docs: [
+              {
+                name: '공동명의 등기 서약서 (+ 등본상 관계 미확인 시 가족관계증명서)',
+                validity: '가족관계 3개월 이내',
+                detail: '제3자 불가, 부부일 경우만 가능 (동일세대 여부 무관)'
+              },
+              {
+                name: '매수주택 건물등기사항증명서 ("매매"에 한하여 사후 징구)',
+                validity: '발급 1개월 이내',
+                detail: '매매 케이스에 한하여 가입자 본인 공동명의 등기 완료 여부 확인 필수'
+              }
+            ]
+          },
+          {
+            id: 'COND_UNKNOWN_USE',
+            label: '계약서상 주거용도 확인이 불가능한 경우',
+            docs: [
+              {
+                name: '매수주택 건축물관리대장 (+ 필요시 재산세(주택) 납부영수증)',
+                validity: '발급 1개월 이내',
+                detail: '중개대상물 확인설명서 불가 · 비주거용이나 소유권이전등기 시 주거용 신고 후 주택 재산세 납부 시 납부영수증 제출 가능 (과세시점 불일치 시 전입신고 완료자에 한해 예외 인정, 전입예정 불가)'
+              }
+            ]
+          }
+        ]
+      },
+
+      HOUSE_RENT: {
+        id: 'HOUSE_RENT',
+        Plans: ['DC', 'IRP'],
+        title: '② 무주택자인 가입자의 주거목적 전/월세 보증금',
+        shortTitle: '② 전/월세 보증금 (무주택자)',
+        period: '계약체결일 ~ 잔금지급일 이후 1개월 이내 신청',
+        limitNote: 'DC형: 해당 사업장 재직 중 1회 제한 / 개인형IRP: 횟수 제한 없음',
+        taxInfo: {
+          recognized: false,
+          badge: '일반 과세 대상 (저율 분리과세 미적용)',
+          employerTax: '퇴직소득세 100% 부과 (DC 회사부담금 / IRP 이연퇴직소득)',
+          profitTax: '기타소득세 16.5% 분리과세 (운용수익 및 세액공제 본인부담금)',
+          note: '근로자퇴직급여 보장법상 적법한 중도인출 사유이나, 소득세법상 부득이한 인출(저율 분리과세) 대상에는 해당하지 않아 일반 세율이 적용됩니다.'
+        },
+        eligibilityQuestions: [
+          {
+            id: 'inRentPeriod',
+            label: '계약체결일로부터 잔금지급일 이후 1개월 이내 신청입니까?',
+            desc: '신청서상 신청일 기준으로 기한 충족 여부 판단',
+            rejectMsg: '전/월세 보증금 신청기한(계약체결일 ~ 잔금지급일 후 1개월 이내)이 경과하였습니다.'
+          },
+          {
+            id: 'rentCountOk',
+            label: '[DC형 전용] 현재 재직 중인 사업장에서 전/월세 사유로 중도인출(중간정산 포함)을 받은 적이 없습니까?',
+            desc: '개인형IRP 가입자는 횟수 제한이 없으므로 무조건 [예] 선택',
+            onlyPlan: 'DC',
+            rejectMsg: 'DC형 가입자의 전/월세 보증금 중도인출은 동일 사업장 재직 중 1회만 가능합니다.'
+          },
+          {
+            id: 'hasDepositIncrease',
+            label: '전/월세 보증금이 있는 주거용 계약입니까? (연장계약 시 보증금 인상분이 존재함)',
+            desc: '순수 월세만 있는 계약, 무보증 원룸 예치금, 보증금 증액 없이 월세만 인상된 연장계약은 신청 불가 (전전세는 가능)',
+            rejectMsg: '보증금이 없는 월세, 무보증 예치금, 또는 보증금 인상분이 없는 연장계약은 중도인출이 불가합니다.'
+          }
+        ],
+        baseDocs: [
+          {
+            name: '중도인출신청서 및 개인(신용)정보 수집·이용 동의서',
+            validity: '신청일 기준',
+            detail: '중도인출사유, 입사일/최종 중간정산일 명시 · IRP 수령 불가, 본인명의 계좌로만 신청'
+          },
+          {
+            name: '현거주지 주민등록등본',
+            validity: '발급 3개월 이내',
+            detail: '외국인등록사실증명서 또는 국내거소신고사실증명서 대체 가능'
+          },
+          {
+            name: '주민등록등본 주소지의 건물등기사항증명서 (또는 건축물대장)',
+            validity: '발급 1개월 이내',
+            detail: '소유주 표시된 건축물대장 첨부 가능'
+          },
+          {
+            name: '지방세 세목별 과세증명서 (전국자치단체 / 재산세-주택)',
+            validity: '전년~당해년도 (10~12월은 당해만)',
+            detail: '재산세(주택) 납부사실이 있는 경우 전국 16개 자치단체 과세증명서 + 매도계약서 또는 등기사항증명서 첨부'
+          },
+          {
+            name: '임대차계약서(사본) 또는 전월세계약서(사본)',
+            validity: '신규/연장 모두 가능',
+            detail: '주거용 여부 확인 가능할 것 · 전전세 가능(임대인≠소유주 가능) · 연장계약 시 보증금 인상분 확인 필수'
+          }
+        ],
+        subTypesTitle: null,
+        subTypes: [],
+        conditions: [
+          {
+            id: 'RENT_NO_BROKER',
+            label: '중개인 없는 계약 (개인 간 직거래 & 아직 전입신고 전인 경우)',
+            docs: [
+              {
+                name: '계약금 입금확인증(사본) 또는 영수증(사본)',
+                validity: '전입 완료 시 생략',
+                detail: '계약서상 영수인 유효 · 이미 해당 임차주택으로 전입신고를 완료한 경우에는 징구 불필요'
+              }
+            ]
+          },
+          {
+            id: 'RENT_SAME_ADDR_NEW',
+            label: '[신규계약] 임차주택 주소와 주민등록등본상 현 거주지가 동일한 경우',
+            docs: [
+              {
+                name: '주민등록초본 + 초본상 직전주소 기준 건물등기부등본',
+                validity: '초본 3개월 / 등기 1개월',
+                detail: '신규계약이나 전입 1년 이상 시 생략 가능 · 직전 임대차계약서 첨부(또는 계약서상 직전 내역 확인) 시 주민등록초본 생략 가능'
+              }
+            ]
+          },
+          {
+            id: 'RENT_SAME_ADDR_EXT',
+            label: '[연장계약] 임차주택 주소와 현 거주지 확인 (연장계약 시)',
+            docs: [
+              {
+                name: '주민등록초본 (+ 등본 주소지 상이 시 확약서)',
+                validity: '발급 3개월 이내',
+                detail: '연장계약은 직전주소 등기 없이 초본만 징구 · 단, 연장계약이나 주민등록등본 주소지가 상이한 경우 확약서 추가 첨부'
+              }
+            ]
+          },
+          {
+            id: 'RENT_UNKNOWN_USE',
+            label: '계약서상 주거용도 확인이 불가능한 경우',
+            postCheck: '전입신고 예정으로 확약서를 제출한 경우, 전입신고 이후 주민등록등본을 통해 실제 전입 여부를 사후확인(必)해야 합니다.',
+            docs: [
+              {
+                name: '건축물관리대장',
+                validity: '발급 1개월 이내',
+                detail: '중개대상물 확인설명서 불가 · 주거용으로 확인되지 않더라도 이미 전입신고를 완료했으면 중도인출 가능'
+              },
+              {
+                name: '[미전입 시] 전입신고 확약서 + (전입 후) 임차주소 주민등록등본',
+                validity: '사후확인 필수',
+                detail: '주택매매와 달리 향후 해당 주소로 전입신고하겠다는 확약서 추가 징구 시 중도인출 가능 (전입 후 등본 사후확인 필수)'
+              }
+            ]
+          },
+          {
+            id: 'RENT_FAMILY_NAME',
+            label: '동거 중인 가족(배우자, 직계존비속, 형제자매) 명의로 계약한 경우',
+            docs: [
+              {
+                name: '주민등록등본 (동일세대 확인용) + 향후 주거 서약서',
+                validity: '발급 3개월 이내',
+                detail: '동일세대(동거) 중인 가족 명의 계약만 가능하며 타인 명의는 불가 · 가족관계증명서는 동일세대 확인이 안 되므로 반드시 주민등록등본 첨부 필요'
+              }
+            ]
+          }
+        ]
+      },
+
+      MEDICAL: {
+        id: 'MEDICAL',
+        Plans: ['DC', 'IRP'],
+        title: '③ 본인 및 부양가족의 6개월 이상 요양 (의료비)',
+        shortTitle: '③ 6개월 이상 요양',
+        period: '요양사유 확인일 ~ 요양 종료일로부터 1개월 이내 (※ 저율 분리과세 적용은 사유 확인일로부터 6개월 이내 신청 필수)',
+        limitNote: '법정 인출한도: 기본 200만원 + 의료비 / 저율과세 한도: 의료비 + 간병비 + (요양개월×150만원) - 200만원',
+        taxInfo: {
+          recognized: true,
+          badge: '세법상 저율 분리과세 인정 (부득이한 인출 1호 사유)',
+          employerTax: '퇴직소득세의 70% 연금소득세 분리과세 (30% 세액 감면)',
+          profitTax: '연금소득세 3.3% ~ 5.5% 분리과세 (16.5% 기타소득세 면제 · 연 1,500만원 한도 제외)',
+          limitFormula: '저율 과세 한도 = 실제 의료비 + 간병인 비용 + (요양 개월 수 × 150만 원) - 200만 원',
+          note: '사유 확인일(진단일)로부터 6개월 이내에 증빙서류를 제출하여 신청해야 세법상 저율 분리과세가 적용됩니다.'
+        },
+        eligibilityQuestions: [
+          {
+            id: 'medPeriodOk',
+            label: '요양사유 확인일로부터 요양 종료일 후 1개월 이내에 신청합니까?',
+            desc: '요양 진행 중이거나 종료(또는 사망) 후 1개월 이내여야 함 (※ 세법상 저율과세 혜택은 사유 확인일로부터 6개월 이내 신청 필수)',
+            rejectMsg: '요양 종료일로부터 1개월이 경과하여 중도인출 신청이 불가합니다.'
+          },
+          {
+            id: 'medSixMonthsOk',
+            label: '진단서(소견서) 또는 장기요양확인서상 "6개월 이상 치료/요양 필요"가 명확히 확인됩니까?',
+            desc: '<가능> 6개월 간, 동안, 남짓, 여, 수년간, 평생, 건강보험산정특례대상자 / <불가> 6개월 가량, 정도, 간격, 마다, 쯤, 수월간, 단순 미용·관찰·검진 목적',
+            rejectMsg: '6개월 이상 치료/요양 요건이 충족되지 않거나 불인정 표현("6개월 가량/정도/간격" 등)인 경우 신청이 불가합니다.'
+          },
+          {
+            id: 'medWageRatioOk',
+            label: '[DC형 전용] 가입자가 부담한 의료비(지출+확정예정액)가 연간임금총액의 12.5%를 초과합니까?',
+            desc: 'min(전년도 임금총액, 직전 1년간 임금총액) 기준 12.5% 초과 필수 (개인형IRP는 근로소득 무관하게 신청 가능)',
+            onlyPlan: 'DC',
+            rejectMsg: 'DC형 가입자는 의료비 총액이 연간임금총액의 12.5%를 초과하지 않으면 중도인출이 불가합니다.'
+          }
+        ],
+        baseDocs: [
+          {
+            name: '중도인출신청서 및 개인(신용)정보 수집·이용 동의서',
+            validity: '신청일 기준',
+            detail: '중도인출사유, 입사일/최종 중간정산일 명시 · IRP 수령 불가, 송금위임 요청 불가'
+          },
+          {
+            name: '진단서(소견서) 또는 건강보험공단 장기요양확인서(인정서)',
+            validity: '발급 6개월 이내',
+            detail: '병명(질병분류코드) 및 6개월 이상 치료기간 명시 필수 · 건강보험산정특례대상자는 6개월 기간 명시 없어도 가능 · 국내 의사/한의사 면허 발급분(DC 외국인 부양가족은 자국 진단서 가능)'
+          },
+          {
+            name: '[의료비 증빙 ①] 직전 1년간 지출한 의료비 영수증/납입확인서',
+            validity: '신청일 직전 1년간 지출분',
+            detail: '<의료기관> 진료비계산서·영수증, 진료비(약제비)납입확인서, 진료비세부산정내역 등 / <장기요양기관> 장기요양급여비용명세서 등 · 병원 영수증 없이 카드전표/현금영수증만 제출 시 불인정 · 진단서와 환자 인적사항 및 질병번호 일치 확인'
+          }
+        ],
+        subTypesTitle: '요양 대상자 구분 (1가지 선택)',
+        subTypes: [
+          {
+            id: 'MED_SELF',
+            label: '가입자 본인 요양',
+            docs: []
+          },
+          {
+            id: 'MED_FAMILY_ADULT',
+            label: '부양가족 요양 (성년: 배우자 / 만60세 이상 직계존속·형제자매)',
+            docs: [
+              {
+                name: '개인(신용)정보 수집·이용 동의서 (부양가족 추가제출용)',
+                validity: '신청일 기준',
+                detail: '성년 부양가족 요양 시 필수 추가 징구'
+              },
+              {
+                name: '가족관계증명서 또는 주민등록등본',
+                validity: '발급 3개월 이내',
+                detail: '배우자(연령무관), 본인 및 배우자의 직계존속(만60세 이상), 형제자매(만60세 이상) 연령요건 확인 · DC 외국인가입자는 자국 가족관계 서류'
+              }
+            ]
+          },
+          {
+            id: 'MED_FAMILY_MINOR',
+            label: '부양가족 요양 (미성년: 만20세 이하 직계비속·형제자매)',
+            docs: [
+              {
+                name: '가족관계증명서 또는 주민등록등본',
+                validity: '발급 3개월 이내',
+                detail: '직계비속(만20세 이하), 형제자매(만20세 이하) 연령요건 충족 확인'
+              }
+            ]
+          }
+        ],
+        conditions: [
+          {
+            id: 'MED_DC_OVER1',
+            label: '[DC형 필수] 재직 1년 이상 가입자 연간임금총액 증빙',
+            onlyPlan: 'DC',
+            docs: [
+              {
+                name: '전년도 근로소득원천징수영수증 또는 보수총액신고서 또는 급여명세서',
+                validity: '발급 3개월 이내 (직전년도)',
+                detail: '직전 1년간 임금총액이 전년도 임금총액보다 더 낮은 경우: 전년도 소득서류 + 신청일 기준 직전 1년간 급여명세서 함께 첨부(더 낮음을 증빙)'
+              }
+            ]
+          },
+          {
+            id: 'MED_DC_UNDER1',
+            label: '[DC형 필수] 재직 1년 미만(& 수급자격 Y) 가입자 연간임금총액 증빙',
+            onlyPlan: 'DC',
+            docs: [
+              {
+                name: '재직 중 월별 급여명세서 (또는 월평균 급여 확인 객관적 서류)',
+                validity: '재직기간 전체',
+                detail: '연간임금총액 = 재직 중 월급여 평균액 × 12로 산출하여 12.5% 초과 여부 판단'
+              }
+            ]
+          },
+          {
+            id: 'MED_SCHEDULED_COST',
+            label: '[의료비 증빙 ②] 지출 예정이 확정된 의료비 또는 간병인 비용을 합산하는 경우',
+            docs: [
+              {
+                name: '의료기관 발행 청구서 / 의료기기 견적서 / 간병료영수증(간병인 인적사항 기재)',
+                validity: '신청일 이전 1개월 이내 발급분',
+                detail: '향후의료비추정서 불가 · 의료기기 구입/임차 견적서는 [장애인보장구 필요 진단서 + 보장구급여비지급청구서 + 처방전 + 검수확인서] 추가 · 세법상 저율과세 한도 산출 시 간병비 포함 가능'
+              }
+            ]
+          },
+          {
+            id: 'MED_DISABLED_FAMILY',
+            label: '요양 대상 부양가족이 장애인인 경우 (연령요건 미충족 시 면제 적용)',
+            docs: [
+              {
+                name: '장애인등록증(장애인복지카드 등) 또는 중증환자장애인증명서(의사 발급)',
+                validity: '유효 등록분',
+                detail: '요양 주체가 장애인인 경우 부양가족 연령요건(만60세 이상 / 만20세 이하)을 적용하지 않음 (연령요건 이미 충족 시 제출 불필요)'
+              }
+            ]
+          },
+          {
+            id: 'MED_ENDED_1M',
+            label: '요양(치료) 종료일 이후 1개월 이내에 신청하는 경우',
+            docs: [
+              {
+                name: '실제 치료비를 지불한 요양비영수증 (진료비영수증)',
+                validity: '실제 수납분',
+                detail: '요양이 종료된 경우에는 실제 치료비를 지불했다는 영수증 추가 제출 필수'
+              }
+            ]
+          },
+          {
+            id: 'MED_DEATH_1M',
+            label: '요양 종료일 이후 사망 1개월 이내에 신청하는 경우',
+            docs: [
+              {
+                name: '사망진단서 + 실제 지불한 요양비영수증(진료비영수증)',
+                validity: '사망 후 1개월 내',
+                detail: '대상자가 부양가족인 경우 신청일 시점의 연령요건 적용'
+              }
+            ]
+          }
+        ]
+      },
+
+      LEGAL: {
+        id: 'LEGAL',
+        Plans: ['DC', 'IRP'],
+        title: '④ 개인회생 절차 개시결정 / 파산선고',
+        shortTitle: '④ 개인회생 / 파산선고',
+        period: '개시결정일 또는 파산선고일로부터 5년 이내 (※ 세법상 저율 분리과세는 결정/선고일로부터 6개월 이내 신청 원칙)',
+        limitNote: '5년 이내 여러 번 신청 가능 · 세법상 저율 분리과세 한도 제한 없음 (전액 감면)',
+        taxInfo: {
+          recognized: true,
+          badge: '세법상 저율 분리과세 인정 (부득이한 인출 2·3호 사유)',
+          employerTax: '퇴직소득세의 70% 연금소득세 분리과세 (30% 세액 감면)',
+          profitTax: '연금소득세 3.3% ~ 5.5% 분리과세 (한도 제한 없이 인출액 전액 적용)',
+          limitFormula: '저율 과세 한도 제한 없음 (인출액 전액 저율 분리과세 종결)',
+          note: '개인회생절차 개시결정 및 파산선고는 인출 한도 제한 없이 저율 분리과세가 적용됩니다. (단, 소득세법상 사유 확인일로부터 6개월 이내 신청 요건 확인 필요)'
+        },
+        eligibilityQuestions: [
+          {
+            id: 'legalWithin5Y',
+            label: '개인회생 개시결정일 또는 파산선고일로부터 5년 이내입니까?',
+            desc: '개인워크아웃제도, 신용회복위원회 워크아웃은 중도인출 대상 아님(불가)',
+            rejectMsg: '결정/선고일로부터 5년이 경과하였거나, 워크아웃/신용회복 건은 중도인출이 불가합니다.'
+          },
+          {
+            id: 'legalActive',
+            label: '[개인회생의 경우] 현재 회생절차 효력이 유지 중입니까? (폐지결정 또는 면책결정이 아님)',
+            desc: '채권자가 단순 폐지신청만 한 경우나 폐지취소 결정된 경우는 가능 · 폐지결정에 즉시항고 중이면 예외 가능',
+            rejectMsg: '개인회생 폐지결정(항고 없음) 또는 면책결정 시에는 효력이 종료되어 중도인출이 불가합니다.'
+          }
+        ],
+        baseDocs: [
+          {
+            name: '중도인출신청서 및 개인(신용)정보 수집·이용 동의서',
+            validity: '신청일 기준',
+            detail: '중도인출사유, 입사일/최종 중간정산일 명시 · IRP 수령 불가, 송금위임 요청 불가'
+          }
+        ],
+        subTypesTitle: '세부 사유 선택 (1가지 필수 선택)',
+        subTypes: [
+          {
+            id: 'LEGAL_REHAB',
+            label: '개인회생 절차 개시결정',
+            docs: [
+              {
+                name: '최근 5년 이내 회생절차 개시결정문(사본) 또는 개인회생절차변제인가 확정증명원',
+                validity: '결정일로부터 5년 이내',
+                detail: '개인회생절차 개시 여부를 객관적으로 확인할 수 있는 법원 서류'
+              },
+              {
+                name: '대법원 "나의 사건검색" 출력물 (진행경과를 [전체]로 출력)',
+                validity: '발급 1개월 이내',
+                detail: '대법원 홈페이지(www.scourt.go.kr) > 대국민서비스 > 정보 > 사건검색 > 나의사건검색 · 폐지결정/면책결정 여부 확인 필수'
+              }
+            ]
+          },
+          {
+            id: 'LEGAL_BANKRUPT',
+            label: '파산선고',
+            docs: [
+              {
+                name: '최근 5년 이내 파산선고문 (사본)',
+                validity: '선고일로부터 5년 이내',
+                detail: '파산선고의 경우 면책, 복권 결정 여부 불문하고 신청 가능'
+              }
+            ]
+          }
+        ],
+        conditions: [
+          {
+            id: 'LEGAL_APPEAL',
+            label: '[개인회생 예외] 폐지결정에 대해 가입자가 즉시항고하고 폐지취소 결정 전에 신청하는 경우',
+            docs: [
+              {
+                name: '항고사실확인서류 + 상환계획서 + 미납변제금 납입영수증',
+                validity: '신청 시점 유효분',
+                detail: '폐지결정 상태이나 즉시항고 진행 중임을 입증하여 예외적으로 중도인출 허용'
+              }
+            ]
+          }
+        ]
+      },
+
+      DISASTER: {
+        id: 'DISASTER',
+        Plans: ['DC', 'IRP'],
+        title: '⑤ 재난으로 인한 물적·인적 피해',
+        shortTitle: '⑤ 재난 피해 (물적/인적)',
+        period: '피해발생일로부터 3개월 이내 (미해소 증명 시 해소 전까지, 실종은 최대 1년 / 저율과세는 6개월 이내)',
+        limitNote: '★ 중요: 천재지변 및 15일 이상 입원(인적피해)만 저율 분리과세 인정 / 단순 물적피해는 일반 과세(16.5%)',
+        taxInfo: {
+          recognized: 'PARTIAL',
+          badge: '인적 피해(15일 입원)·천재지변만 저율 과세 / 단순 물적 피해는 일반 과세!',
+          employerTax: '[천재지변·15일 입원] 퇴직소득세 70% / [단순 물적 피해] 퇴직소득세 100%',
+          profitTax: '[천재지변·15일 입원] 연금소득세 3.3~5.5% / [단순 물적 피해] 기타소득세 16.5%',
+          limitFormula: '15일 이상 입원 저율과세 한도 = 실제 의료비 + 간병인 비용 + (요양 개월 수 × 150만 원) - 200만 원',
+          note: '고용노동부 고시상 주거시설 침수·파손 등 물적 피해도 중도인출 자체는 가능하지만, 소득세법상 부득이한 사유에는 포함되지 않아 16.5% 기타소득세 및 퇴직소득세 100%가 부과됩니다.'
+        },
+        eligibilityQuestions: [
+          {
+            id: 'disasterPeriodOk',
+            label: '재난 피해 발생일로부터 3개월 이내입니까? (또는 사유 미해소 증명 가능 / 실종 1년 이내)',
+            desc: '자연재난(태풍, 홍수, 지진 등) 또는 특별재난지역이 선포된 사회재난(화재, 감염병 등) 대상',
+            rejectMsg: '재난 피해 신청기한(피해발생일로부터 3개월 이내, 실종 최대 1년)이 경과하였습니다.'
+          }
+        ],
+        baseDocs: [
+          {
+            name: '중도인출신청서 및 개인(신용)정보 수집·이용 동의서',
+            validity: '신청일 기준',
+            detail: '중도인출사유, 입사일/최종 중간정산일 명시 · 해당 건 발생 시 DC는 연금업무지원팀 플랜담당자, IRP는 연금업무개발팀 문의 후 처리 요망'
+          }
+        ],
+        subTypesTitle: '재난 피해 세부 유형 (1가지 필수 선택 · 과세방식 상이)',
+        subTypes: [
+          {
+            id: 'DIS_HUMAN_HOSP',
+            label: '[인적피해 - 저율과세 인정] 가입자 본인이 15일 이상 입원 치료가 필요한 피해',
+            docs: [
+              {
+                name: '15일 이상 입원사실 확인서류 (진단서, 소견서, 진료비 세부내역서, 입원·격리통지서 등)',
+                validity: '종료일 명시 필수',
+                detail: '증빙자료에 의료행위 종료일, 퇴원일, 격리해제일 등 의료행위가 종료된 날짜 명시 필수 · [세법상 저율 분리과세 인정 대상 (산식 한도 내)]'
+              }
+            ]
+          },
+          {
+            id: 'DIS_HUMAN_MISSING',
+            label: '[인적피해] 배우자 또는 생계를 같이하는 부양가족이 실종된 경우',
+            docs: [
+              {
+                name: '실종증명서 또는 실종이 정리된 「가족관계등록에 관한 법률」에 따른 증명서',
+                validity: '실종일로부터 최대 1년',
+                detail: '시·군·구청 등 발급 실종 입증 서류'
+              },
+              {
+                name: '가족관계증명서 또는 주민등록등본 (부양가족 확인용)',
+                validity: '발급 3개월 이내',
+                detail: '소득세법상 부양가족 기준(소득요건 제외, 연령요건 충족 필요: 직계존속/형제자매 만60세 이상, 직계비속/형제자매 만20세 이하)'
+              }
+            ]
+          },
+          {
+            id: 'DIS_PHYSICAL',
+            label: '[물적피해 - 일반과세 주의] 주거시설(소유 또는 임차)이 유실·전파 또는 반파된 피해',
+            docs: [
+              {
+                name: '건축물대장등본 (+ 임차인 경우 임대차계약서 추가)',
+                validity: '발급 1개월 이내',
+                detail: '가입자, 배우자, 생계를 같이하는 부양가족이 거주하는 시설로 한정 · ⚠️ 주의: 단순 물적 피해는 소득세법상 저율과세 불인정(기타소득세 16.5% 및 퇴직소득세 100% 일반과세) (단, 천재지변에 해당하는 경우는 세법 요건 별도 확인)'
+              }
+            ]
+          }
+        ],
+        conditions: [
+          {
+            id: 'DIS_NATURAL',
+            label: '[자연재난] 태풍, 홍수, 호우, 강풍, 대설, 지진 등 자연현상으로 인한 재해 (천재지변 저율과세 가능)',
+            docs: [
+              {
+                name: '피해사실확인서 또는 자연재난 피해신고서에 따른 행정기관의 피해조사(확인)자료',
+                validity: '시·군·구청/읍·면장 발급',
+                detail: '자연재해대책법 시행규칙 별지 제16호 서식(피해사실확인서) 또는 재난구호규정 별지 제1호 서식'
+              }
+            ]
+          },
+          {
+            id: 'DIS_SOCIAL',
+            label: '[사회재난] 특별재난지역이 선포된 사회재난 (화재, 붕괴, 폭발, 감염병 등)',
+            docs: [
+              {
+                name: '중앙재난안전대책본부의 특별재난지역 선포 확인자료 (+ 물적피해 시 주거비 지원 내역)',
+                validity: '직원 직접 확인 시 생략 가능',
+                detail: '행정안전부 홈페이지(뉴스·소식 > 보도자료 > 특별재난지역 검색) 통해 업무처리직원이 직접 확인 후 신청서상 기재 시 고객 징구 생략 가능'
+              }
+            ]
+          },
+          {
+            id: 'DIS_FAMILY_CHECK',
+            label: '물적피해 주거시설이 부양가족 거주 시설인 경우',
+            docs: [
+              {
+                name: '가족관계증명서 또는 주민등록등본',
+                validity: '발급 3개월 이내',
+                detail: '생계를 같이하는 부양가족 여부 및 연령요건 확인'
+              }
+            ]
+          }
+        ]
+      },
+
+      LOAN_REPAY: {
+        id: 'LOAN_REPAY',
+        Plans: ['DC', 'IRP'],
+        title: '⑥ 퇴직연금 수급권 담보대출 원리금 상환 [미정]',
+        shortTitle: '⑥ 담보대출 상환 (미정)',
+        period: '세부 기준 미정 (본사 담당부서 사전 문의 필수)',
+        limitNote: '발생 시 본사 담당팀 사전 협의 필수',
+        taxInfo: {
+          recognized: false,
+          badge: '일반 과세 대상 (저율 분리과세 미적용)',
+          employerTax: '퇴직소득세 100% 부과',
+          profitTax: '기타소득세 16.5% 분리과세',
+          note: '담보대출 원리금 상환 사유는 세법상 부득이한 인출 특례 대상에 해당하지 않습니다.'
+        },
+        eligibilityQuestions: [
+          {
+            id: 'loanConsulted',
+            label: '본사 담당부서(DC: 연금업무지원팀 플랜담당자 / IRP: 연금업무개발팀)에 사전 문의를 완료하셨습니까?',
+            desc: '현재 신청시기 및 담보대출 확인서류 세부사항이 [미정] 상태이므로 본사 확인 후 처리해야 합니다.',
+            rejectMsg: '담보대출 원리금 상환 건은 본사 담당부서(DC: 연금업무지원팀 / IRP: 연금업무개발팀)에 먼저 문의 후 처리해야 합니다.'
+          }
+        ],
+        baseDocs: [
+          {
+            name: '중도인출신청서',
+            validity: '신청일 기준',
+            detail: '중도인출사유, 입사일/최종 중간정산일 명시 · IRP 수령 불가, 송금위임 요청 불가'
+          },
+          {
+            name: '퇴직연금 수급권 담보대출 확인서류 (본사 담당팀 안내 서류)',
+            validity: '담당부서 확인',
+            detail: 'DC: TR-7969_2탭 업무담당자 확인 / IRP: 연금업무개발팀 문의 후 징구'
+          }
+        ],
+        subTypesTitle: null,
+        subTypes: [],
+        conditions: []
+      },
+
+      // =======================================================================
+      // [세 번째 메뉴 복원: 개인형IRP 부득이한 인출 (비정기연금인출 및 계약해지 시)]
+      // 엑셀 원본 하단 6대 사유 + 저율 분리과세(퇴직소득세 70%, 연금소득세 3.3~5.5%) 통합 표시
+      // =======================================================================
+      IRP_SPEC_MED: {
+        id: 'IRP_SPEC_MED',
+        Plans: ['IRP_SPECIAL'],
+        title: '[IRP 부득이한 인출 ①] 본인·배우자 등 부양가족의 3개월 이상 요양',
+        shortTitle: '① 3개월 이상 요양 (IRP 특례)',
+        period: '사유 확인일로부터 6개월 이내 신청 (연금개시 전·후 불문 연금수령 의제)',
+        limitNote: '특례세율 한도 = 실제 의료비 + 간병비 + (요양/휴직 개월 수 × 150만 원) - 200만 원',
+        taxInfo: {
+          recognized: true,
+          badge: 'IRP 부득이한 인출 저율 분리과세 적용 (연금저축 동일 기준)',
+          employerTax: '이연퇴직소득 원금 : 발생한 이연퇴직소득세의 70% (연금소득세 분리과세)',
+          profitTax: '운용수익 · 세액공제 본인부담금 : 연령별 연금소득세 3.3% ~ 5.5% 분리과세 (연 1,500만 원 한도 제외)',
+          limitFormula: '저율 과세 한도 = 실제 의료비 + 간병인 비용 + (요양 개월 수 × 150만 원) - 200만 원 (※ 엑셀 내부기준: 기본 200만원 + 의료비 + 간병비 + 본인휴직월수×150만원)',
+          note: '일반 중도인출(6개월 요양)과 달리, 개인형IRP의 비정기연금인출 및 계약해지 시에는 연금저축계좌와 동일하게 "3개월 이상 요양"부터 특례세율(저율 분리과세)이 적용됩니다. 인출 자체는 전액 가능하나 특례세율은 한도 내 금액에만 적용됩니다.'
+        },
+        eligibilityQuestions: [
+          {
+            id: 'irpSpecMed3M',
+            label: '진단서(소견서) 또는 장기요양확인서상 "3개월 이상의 요양(치료) 기간"이 명시되어 있습니까?',
+            desc: '연금저축계좌와 기준 동일함 · 사유 확인일로부터 6개월 이내 신청 시 저율 분리과세 적용',
+            rejectMsg: '3개월 이상 요양 기간이 확인되지 않으면 부득이한 사유 특례세율 적용이 불가합니다.'
+          }
+        ],
+        baseDocs: [
+          {
+            name: '[필수] 진단서(소견서) 또는 건강보험공단의 장기요양확인서(인정서) 등 객관적 치료기록',
+            validity: '발급 6개월 이내',
+            detail: '병명 및 3개월 이상의 요양(치료)기간이 명시된 객관적 치료기록 필수'
+          }
+        ],
+        subTypesTitle: null,
+        subTypes: [],
+        conditions: [
+          {
+            id: 'IRP_SPEC_MED_COST',
+            label: '[선택] 의료비 및 간병비 증빙서류 제출 (특례세율 적용 한도 산출·확대 시)',
+            docs: [
+              {
+                name: '진료비영수증, 간병료영수증(간병인의 이름, 생년월일 등 인적사항 기재 필수) 등 의료비 지출 증빙서류',
+                validity: '인적사항 기재 필수',
+                detail: '간병료영수증에는 반드시 간병인의 성명, 생년월일 등 인적사항이 기재되어 있어야 인정됨'
+              }
+            ]
+          },
+          {
+            id: 'IRP_SPEC_LEAVE',
+            label: '[선택] 가입자 본인의 휴직/휴업 증빙서류 제출 (본인만 가능 / 부양가족 불가)',
+            docs: [
+              {
+                name: '휴직/휴업 증명서 (소속 사업장 발행 등 객관적 서류)',
+                validity: '본인 휴직/휴업만 인정',
+                detail: '가입자 본인의 휴직/휴업 기간(월수 × 150만 원)을 반영하여 요양인출 특례세율 한도를 추가로 적용받을 때 제출 (부양가족 휴직은 불가)'
+              }
+            ]
+          },
+          {
+            id: 'IRP_SPEC_FAMILY',
+            label: '배우자 또는 부양가족의 3개월 이상 요양인 경우',
+            docs: [
+              {
+                name: '가족관계증명서 또는 주민등록등본 (+ 성년 부양가족 개인정보동의서)',
+                validity: '발급 3개월 이내',
+                detail: '부양가족 관계 및 연령요건(배우자 무관, 직계존속 만60세 이상, 직계비속 만20세 이하 등) 확인'
+              }
+            ]
+          }
+        ]
+      },
+
+      IRP_SPEC_LEGAL: {
+        id: 'IRP_SPEC_LEGAL',
+        Plans: ['IRP_SPECIAL'],
+        title: '[IRP 부득이한 인출 ②] 개인회생 절차 개시결정 / 파산선고',
+        shortTitle: '② 개인회생 / 파산선고',
+        period: '개시결정일 또는 파산선고일로부터 5년 이내 (사유 확인일로부터 6개월 이내 신청 시 저율 과세)',
+        limitNote: '특례세율(저율 분리과세) 한도 제한 없음 (전액 적용)',
+        taxInfo: {
+          recognized: true,
+          badge: 'IRP 부득이한 인출 저율 분리과세 적용 (전액)',
+          employerTax: '이연퇴직소득 원금 : 발생한 이연퇴직소득세의 70% (연금소득세 분리과세)',
+          profitTax: '운용수익 · 세액공제 본인부담금 : 연령별 연금소득세 3.3% ~ 5.5% 분리과세',
+          limitFormula: '특례세율 한도 제한 없음 (인출/해지 금액 전액 저율 분리과세)',
+          note: '연금개시 전·후 불문하고 연금수령으로 보아 이연퇴직소득 원금 포함 전액 연금소득세로 저율 분리과세합니다.'
+        },
+        eligibilityQuestions: [
+          {
+            id: 'irpSpecLegalOk',
+            label: '최근 5년 이내 회생개시결정(효력 유지 중) 또는 파산선고입니까?',
+            desc: '중도인출 사유 증빙 기준과 동일하게 판단',
+            rejectMsg: '요건 미충족 시 부득이한 사유 특례세율 적용이 불가합니다.'
+          }
+        ],
+        baseDocs: [
+          {
+            name: '[개인회생] 최근 5년 이내 회생절차 개시결정문(또는 변제인가 확정증명원) + 대법원 나의사건검색 출력물(전체 경과)',
+            validity: '사건검색 1개월 이내',
+            detail: '중도인출 사유 증빙에 준하는 서류 (폐지결정·면책결정 시 제외)'
+          },
+          {
+            name: '[파산선고] 최근 5년 이내 법원 파산선고문 (사본)',
+            validity: '선고 5년 내',
+            detail: '면책·복권 결정 여부 불문'
+          }
+        ],
+        subTypesTitle: null,
+        subTypes: [],
+        conditions: []
+      },
+
+      IRP_SPEC_DISASTER: {
+        id: 'IRP_SPEC_DISASTER',
+        Plans: ['IRP_SPECIAL'],
+        title: '[IRP 부득이한 인출 ③] 천재지변, 재난피해 등으로 인한 피해',
+        shortTitle: '③ 천재지변 / 재난피해',
+        period: '사유 확인일로부터 6개월 이내 신청',
+        limitNote: '천재지변 및 재난 인적피해(15일 이상 입원) 저율 분리과세 적용',
+        taxInfo: {
+          recognized: true,
+          badge: 'IRP 부득이한 인출 저율 분리과세 적용 (천재지변 & 15일 입원)',
+          employerTax: '이연퇴직소득 원금 : 발생한 이연퇴직소득세의 70% (연금소득세 분리과세)',
+          profitTax: '운용수익 · 세액공제 본인부담금 : 연령별 연금소득세 3.3% ~ 5.5% 분리과세',
+          limitFormula: '15일 이상 입원 시 한도 = 실제 의료비 + 간병인 비용 + (요양 개월 수 × 150만 원) - 200만 원',
+          note: '천재지변 또는 재난으로 인한 15일 이상 입원 치료 시 세법상 저율 분리과세가 적용됩니다.'
+        },
+        eligibilityQuestions: [
+          {
+            id: 'irpSpecDisOk',
+            label: '천재지변 또는 재난으로 인한 피해 사실이 객관적 서류로 확인됩니까?',
+            desc: '사유 확인일로부터 6개월 이내 신청 요건 확인',
+            rejectMsg: '재난 피해 증빙이 확인되지 않으면 특례세율 적용이 불가합니다.'
+          }
+        ],
+        baseDocs: [
+          {
+            name: '피해사실확인서(자연재난) 또는 특별재난지역 선포 확인자료(사회재난) 등 중도인출 증빙에 준하는 서류',
+            validity: '행정기관 발급분',
+            detail: '15일 이상 입원 치료의 경우 입원사실 확인서류(퇴원일/종료일 명시) 및 진료비 영수증 첨부'
+          }
+        ],
+        subTypesTitle: null,
+        subTypes: [],
+        conditions: []
+      },
+
+      IRP_SPEC_DEATH: {
+        id: 'IRP_SPEC_DEATH',
+        Plans: ['IRP_SPECIAL'],
+        title: '[IRP 부득이한 인출 ④] 가입자의 사망',
+        shortTitle: '④ 가입자의 사망',
+        period: '가입자 사망 확인 후 상속인 신청 (사망일로부터 6개월 이내 신청 원칙)',
+        limitNote: '전액 연금소득세 저율 분리과세 적용',
+        taxInfo: {
+          recognized: true,
+          badge: 'IRP 부득이한 인출 저율 분리과세 적용 (가입자 사망)',
+          employerTax: '이연퇴직소득 원금 : 발생한 이연퇴직소득세의 70% (연금소득세 분리과세)',
+          profitTax: '운용수익 · 세액공제 본인부담금 : 연금소득세 3.3% ~ 5.5% 분리과세',
+          limitFormula: '한도 제한 없음 (전액 연금소득세 분리과세)',
+          note: '가입자 사망으로 인한 IRP 계약해지 시 연금개시 전·후 불문하고 연금수령으로 보아 저율 분리과세가 적용됩니다.'
+        },
+        eligibilityQuestions: [],
+        baseDocs: [
+          {
+            name: '사망진단서 및 사망퇴직 사유 증빙에 준하는 서류',
+            validity: '유효 발급분',
+            detail: '가입자의 사망 사실을 객관적으로 확인할 수 있는 서류 및 상속인 확인 서류'
+          }
+        ],
+        subTypesTitle: null,
+        subTypes: [],
+        conditions: []
+      },
+
+      IRP_SPEC_MIGRATION: {
+        id: 'IRP_SPEC_MIGRATION',
+        Plans: ['IRP_SPECIAL'],
+        title: '[IRP 부득이한 인출 ⑤] 가입자의 해외이주',
+        shortTitle: '⑤ 가입자의 해외이주',
+        period: '해외이주 사유 확인일(또는 출국일) 기준 세법상 기한 내 신청',
+        limitNote: '★ 중요: 이연퇴직소득 입금일로부터 3년 이후 해외이주하는 경우에만 특례세율 적용',
+        taxInfo: {
+          recognized: true,
+          badge: 'IRP 부득이한 인출 저율 분리과세 적용 (해외이주)',
+          employerTax: '이연퇴직소득 원금 : 발생한 이연퇴직소득세의 70% (단, 입금 후 3년 경과 시에만 감면 적용)',
+          profitTax: '운용수익 · 세액공제 본인부담금 : 연금소득세 3.3% ~ 5.5% 분리과세',
+          limitFormula: '한도 제한 없음 (단, 이연퇴직소득 입금일로부터 3년 이후 해외이주 조건 필수)',
+          note: '엑셀 명시 기준: 이연퇴직소득이 연금계좌에 입금된 날로부터 3년 이후 해외이주하는 경우에만 특례세율(퇴직소득세 70%)이 적용됩니다.'
+        },
+        eligibilityQuestions: [
+          {
+            id: 'irpSpecMig3Y',
+            label: '이연퇴직소득이 연금계좌(IRP)에 입금된 날로부터 3년 이후에 해외이주합니까?',
+            desc: '엑셀 세부사항: 이연퇴직소득 입금일로부터 3년 이후 해외이주하는 경우에만 특례세율 적용',
+            rejectMsg: '이연퇴직소득이 연금계좌에 입금된 날로부터 3년 이내에 해외이주하는 경우에는 특례세율(저율 분리과세)이 적용되지 않습니다.'
+          }
+        ],
+        baseDocs: [
+          {
+            name: '해외이주신고확인서 (외교부/재외공관 발급 등)',
+            validity: '유효 발급분',
+            detail: '해외이주 사실 확인 필수 (+ 필요시 여권 사본, 출입국사실증명서 등)'
+          }
+        ],
+        subTypesTitle: null,
+        subTypes: [],
+        conditions: []
+      },
+
+      IRP_SPEC_SUSPEND: {
+        id: 'IRP_SPEC_SUSPEND',
+        Plans: ['IRP_SPECIAL'],
+        title: '[IRP 부득이한 인출 ⑥] 금융회사의 영업정지 / 인·허가 취소 / 파산',
+        shortTitle: '⑥ 금융회사의 영업정지',
+        period: '사유 확인일로부터 6개월 이내 신청',
+        limitNote: '전액 연금소득세 저율 분리과세 적용',
+        taxInfo: {
+          recognized: true,
+          badge: 'IRP 부득이한 인출 저율 분리과세 적용 (영업정지)',
+          employerTax: '이연퇴직소득 원금 : 발생한 이연퇴직소득세의 70% (연금소득세 분리과세)',
+          profitTax: '운용수익 · 세액공제 본인부담금 : 연금소득세 3.3% ~ 5.5% 분리과세',
+          limitFormula: '한도 제한 없음 (전액 저율 분리과세)',
+          note: '퇴직연금사업자(금융회사)의 영업정지, 해산, 파산 등으로 인한 계약해지/인출 시 특례세율이 적용됩니다.'
+        },
+        eligibilityQuestions: [],
+        baseDocs: [
+          {
+            name: '금융회사의 영업정지·해산·파산 사실 확인 서류',
+            validity: '유효 확인분',
+            detail: '해당 금융기관 영업정지 등 객관적 확인 자료'
+          }
+        ],
+        subTypesTitle: null,
+        subTypes: [],
+        conditions: []
+      }
+    };
+
+    // =========================================================================
+    // 3. UI RENDERING & INTERACTION LOGIC
+    // =========================================================================
+
+    function initApp() {
+      selectPlanType('DC');
+      renderFlowchart('MAIN');
+      runMedicalCalc();
+      runIrpSpecialCalc();
+    }
+
+    function switchMainTab(tabName) {
+      ['wizard', 'taxguide', 'flowchart', 'calculator'].forEach(t => {
+        const sec = document.getElementById(`section-${t}`);
+        const btn = document.getElementById(`tab-btn-${t}`);
+        if (t === tabName) {
+          sec.classList.remove('hidden');
+          btn.className = 'px-3.5 py-2 rounded-lg text-xs sm:text-sm font-semibold transition-all bg-blue-600 text-white shadow';
+        } else {
+          sec.classList.add('hidden');
+          btn.className = 'px-3.5 py-2 rounded-lg text-xs sm:text-sm font-semibold transition-all text-slate-300 hover:text-white';
+        }
+      });
+    }
+
+    function selectPlanType(planType) {
+      state.planType = planType;
+
+      ['DC', 'IRP', 'IRP_SPECIAL'].forEach(p => {
+        const card = document.getElementById(`plan-${p}`);
+        const dot = document.getElementById(`dot-${p}`);
+        if (p === planType) {
+          card.className = 'step-card text-left p-3.5 rounded-xl border-2 border-blue-600 bg-blue-50/50 relative';
+          dot.className = 'w-2.5 h-2.5 rounded-full bg-blue-600';
+        } else {
+          card.className = 'step-card text-left p-3.5 rounded-xl border-2 border-slate-200 hover:border-slate-300 bg-white relative';
+          dot.className = 'w-2.5 h-2.5 rounded-full bg-slate-300';
+        }
+      });
+
+      const subtitle = document.getElementById('step2-subtitle');
+      if (planType === 'IRP_SPECIAL') {
+        subtitle.textContent = '부득이한 사유에 의한 IRP 비정기연금인출 및 계약해지 사유 선택 (전 항목 저율 분리과세)';
+      } else {
+        subtitle.textContent = '법정 중도인출 사유 선택 (사유별 저율 분리과세 인정 여부 함께 표시)';
+      }
+
+      const availableReasons = Object.values(REASONS_DB).filter(r => r.Plans.includes(planType));
+      if (!availableReasons.some(r => r.id === state.reasonKey)) {
+        state.reasonKey = availableReasons[0].id;
+      }
+
+      renderReasonButtons(availableReasons);
+      selectReason(state.reasonKey);
+    }
+
+    function renderReasonButtons(reasons) {
+      const container = document.getElementById('reason-buttons-container');
+      container.innerHTML = reasons.map(r => {
+        const isSelected = r.id === state.reasonKey;
+        const taxBadge = r.taxInfo.recognized === true
+          ? `<span class="text-[10px] font-bold px-1.5 py-0.5 rounded bg-emerald-100 text-emerald-800 border border-emerald-200">✅ 저율과세(퇴직세70% / 3.3~5.5%)</span>`
+          : r.taxInfo.recognized === 'PARTIAL'
+          ? `<span class="text-[10px] font-bold px-1.5 py-0.5 rounded bg-amber-100 text-amber-800 border border-amber-200">⚠️ 인적피해만 저율과세(물적은 16.5%)</span>`
+          : `<span class="text-[10px] font-medium px-1.5 py-0.5 rounded bg-slate-100 text-slate-600 border border-slate-200">일반과세(퇴직세100% / 기타16.5%)</span>`;
+
+        return `
+          <button type="button" onclick="selectReason('${r.id}')" class="text-left p-3.5 rounded-xl border-2 transition-all flex flex-col justify-between gap-2 ${
+            isSelected
+              ? 'border-blue-600 bg-blue-50/60 text-blue-950 shadow-sm'
+              : 'border-slate-200 hover:border-slate-300 bg-white text-slate-700'
+          }">
+            <div class="w-full flex items-center justify-between gap-2">
+              <span class="text-sm font-bold">${r.shortTitle}</span>
+              <span class="w-4 h-4 rounded-full flex items-center justify-center text-[10px] ${
+                isSelected ? 'bg-blue-600 text-white' : 'bg-slate-100 text-slate-400'
+              }">✓</span>
+            </div>
+            <div>${taxBadge}</div>
+          </button>
+        `;
+      }).join('');
+    }
+
+    function selectReason(reasonKey) {
+      state.reasonKey = reasonKey;
+      const reason = REASONS_DB[reasonKey];
+
+      state.eligibility = {};
+      reason.eligibilityQuestions.forEach(q => {
+        if (!q.onlyPlan || q.onlyPlan === state.planType) {
+          state.eligibility[q.id] = true;
+        }
+      });
+
+      state.subType = (reason.subTypes && reason.subTypes.length > 0) ? reason.subTypes[0].id : null;
+      state.conditions = new Set();
+      state.checkedDocs = new Set();
+
+      if (reasonKey === 'MEDICAL' && state.planType === 'DC') {
+        state.conditions.add('MED_DC_OVER1');
+      }
+      if (reasonKey === 'DISASTER') {
+        state.conditions.add('DIS_NATURAL');
+      }
+
+      const availableReasons = Object.values(REASONS_DB).filter(r => r.Plans.includes(state.planType));
+      renderReasonButtons(availableReasons);
+      renderEligibilityQuestions(reason);
+      renderSubConditions(reason);
+      updateOutputPanel();
+    }
+
+    function renderEligibilityQuestions(reason) {
+      const container = document.getElementById('eligibility-questions-container');
+      const filteredQs = reason.eligibilityQuestions.filter(q => !q.onlyPlan || q.onlyPlan === state.planType);
+
+      if (filteredQs.length === 0) {
+        container.innerHTML = `<div class="text-xs text-slate-500 bg-slate-50 p-3 rounded-xl">별도 사전 제한 요건이 없습니다. (사유 확인일로부터 6개월 이내 신청 시 저율 분리과세 적용)</div>`;
+        return;
+      }
+
+      container.innerHTML = filteredQs.map(q => {
+        const val = state.eligibility[q.id];
+        return `
+          <div class="p-3.5 rounded-xl border ${val ? 'border-slate-200 bg-slate-50/60' : 'border-red-300 bg-red-50/60'} transition-all">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+              <div class="space-y-1">
+                <div class="text-xs sm:text-sm font-bold text-slate-800">${q.label}</div>
+                <div class="text-[11px] text-slate-500 leading-relaxed">${q.desc}</div>
+              </div>
+              <div class="flex items-center gap-1.5 shrink-0 self-end sm:self-center">
+                <button type="button" onclick="setEligibility('${q.id}', true)" class="px-3 py-1.5 rounded-lg text-xs font-bold transition ${
+                  val ? 'bg-blue-600 text-white shadow-sm' : 'bg-white text-slate-600 border border-slate-300'
+                }">예 (충족)</button>
+                <button type="button" onclick="setEligibility('${q.id}', false)" class="px-3 py-1.5 rounded-lg text-xs font-bold transition ${
+                  !val ? 'bg-red-600 text-white shadow-sm' : 'bg-white text-slate-600 border border-slate-300'
+                }">아니오 (미충족)</button>
+              </div>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function setEligibility(qId, isMet) {
+      state.eligibility[qId] = isMet;
+      const reason = REASONS_DB[state.reasonKey];
+      renderEligibilityQuestions(reason);
+      updateOutputPanel();
+    }
+
+    function renderSubConditions(reason) {
+      const container = document.getElementById('subconditions-container');
+      const step4Box = document.getElementById('step4-box');
+
+      const filteredConditions = (reason.conditions || []).filter(c => !c.onlyPlan || c.onlyPlan === state.planType);
+      const hasSubTypes = reason.subTypes && reason.subTypes.length > 0;
+      const hasConditions = filteredConditions.length > 0;
+
+      if (!hasSubTypes && !hasConditions) {
+        step4Box.classList.add('hidden');
+        return;
+      }
+      step4Box.classList.remove('hidden');
+
+      let html = '';
+
+      if (hasSubTypes) {
+        html += `
+          <div>
+            <div class="text-xs font-bold text-slate-700 mb-2">📌 ${reason.subTypesTitle}</div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+              ${reason.subTypes.map(st => {
+                const active = state.subType === st.id;
+                return `
+                  <button type="button" onclick="setSubType('${st.id}')" class="text-left p-3 rounded-xl border text-xs font-semibold transition flex items-center justify-between ${
+                    active ? 'border-indigo-600 bg-indigo-50/80 text-indigo-950 font-bold shadow-2xs' : 'border-slate-200 hover:border-slate-300 bg-white text-slate-700'
+                  }">
+                    <span>${st.label}</span>
+                    <span class="w-4 h-4 rounded-full border flex items-center justify-center shrink-0 ml-2 ${
+                      active ? 'border-indigo-600 bg-indigo-600 text-white' : 'border-slate-300 bg-white'
+                    }">
+                      ${active ? '<span class="w-1.5 h-1.5 rounded-full bg-white"></span>' : ''}
+                    </span>
+                  </button>
+                `;
+              }).join('')}
+            </div>
+          </div>
+        `;
+      }
+
+      if (hasConditions) {
+        html += `
+          <div class="${hasSubTypes ? 'pt-3 border-t border-slate-100' : ''}">
+            <div class="flex items-center justify-between mb-2">
+              <span class="text-xs font-bold text-slate-700">➕ 예외 상황 및 추가 증빙 케이스 (해당 시 체크)</span>
+              <span class="text-[11px] font-semibold text-indigo-600">현재 ${state.conditions.size}개 선택됨</span>
+            </div>
+            <div class="space-y-2">
+              ${filteredConditions.map(c => {
+                const checked = state.conditions.has(c.id);
+                return `
+                  <div role="button" tabindex="0" onclick="toggleCondition('${c.id}')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();toggleCondition('${c.id}');}" class="cursor-pointer select-none p-3.5 rounded-xl border-2 transition-all flex items-start gap-3 ${
+                    checked ? 'border-indigo-600 bg-indigo-50/70 shadow-2xs' : 'border-slate-200 hover:border-indigo-300 hover:bg-slate-50/70 bg-white'
+                  }">
+                    <div class="mt-0.5 w-5 h-5 rounded-md border-2 flex items-center justify-center shrink-0 transition-colors ${
+                      checked ? 'bg-indigo-600 border-indigo-600 text-white' : 'bg-white border-slate-300 text-transparent'
+                    }">
+                      <svg class="w-3.5 h-3.5 stroke-current stroke-[3]" fill="none" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path>
+                      </svg>
+                    </div>
+                    <div class="text-xs flex-1">
+                      <div class="font-bold leading-snug ${checked ? 'text-indigo-950' : 'text-slate-800'}">${c.label}</div>
+                      <div class="text-[11px] text-slate-500 mt-1">추가서류: ${c.docs.map(d => d.name).join(' / ')}</div>
+                      ${c.postCheck ? `<div class="text-[11px] text-amber-700 font-semibold mt-1">⚠️ 사후확인 필수 항목 포함</div>` : ''}
+                    </div>
+                  </div>
+                `;
+              }).join('')}
+            </div>
+          </div>
+        `;
+      }
+
+      container.innerHTML = html;
+    }
+
+    function setSubType(subTypeId) {
+      state.subType = subTypeId;
+      const reason = REASONS_DB[state.reasonKey];
+      renderSubConditions(reason);
+      updateOutputPanel();
+    }
+
+    function toggleCondition(condId) {
+      if (state.conditions.has(condId)) {
+        state.conditions.delete(condId);
+      } else {
+        if (condId === 'MED_DC_OVER1') state.conditions.delete('MED_DC_UNDER1');
+        if (condId === 'MED_DC_UNDER1') state.conditions.delete('MED_DC_OVER1');
+        state.conditions.add(condId);
+      }
+      const reason = REASONS_DB[state.reasonKey];
+      renderSubConditions(reason);
+      updateOutputPanel();
+    }
+
+    function toggleDocCheck(docKey) {
+      if (state.checkedDocs.has(docKey)) {
+        state.checkedDocs.delete(docKey);
+      } else {
+        state.checkedDocs.add(docKey);
+      }
+      updateOutputPanel();
+    }
+
+    function updateOutputPanel() {
+      const reason = REASONS_DB[state.reasonKey];
+
+      const rejections = [];
+      reason.eligibilityQuestions.forEach(q => {
+        if (!q.onlyPlan || q.onlyPlan === state.planType) {
+          if (state.eligibility[q.id] === false) {
+            rejections.push(q.rejectMsg);
+          }
+        }
+      });
+
+      const statusBanner = document.getElementById('status-banner');
+      const statusBadge = document.getElementById('status-badge');
+      const resultTitle = document.getElementById('result-title');
+      const rejectionAlert = document.getElementById('rejection-alert');
+      const rejectionList = document.getElementById('rejection-reasons-list');
+
+      const planLabel = state.planType === 'DC' ? '[DC형]' : state.planType === 'IRP' ? '[개인형IRP]' : '[IRP 부득이한 인출]';
+      resultTitle.textContent = `${planLabel} ${reason.shortTitle}`;
+
+      if (rejections.length > 0) {
+        statusBanner.className = 'bg-red-600 text-white px-5 py-4 flex items-center justify-between';
+        statusBadge.textContent = '심사 결과 : 신청 불가 (요건 미충족)';
+        rejectionAlert.classList.remove('hidden');
+        rejectionList.innerHTML = rejections.map(msg => `<li>${msg}</li>`).join('');
+      } else {
+        statusBanner.className = state.planType === 'IRP_SPECIAL'
+          ? 'bg-emerald-700 text-white px-5 py-4 flex items-center justify-between'
+          : 'bg-blue-600 text-white px-5 py-4 flex items-center justify-between';
+        statusBadge.textContent = '심사 결과 : 신청 가능 (요건 충족)';
+        rejectionAlert.classList.add('hidden');
+      }
+
+      // 저율과세 / 일반과세 박스 상시 표시
+      const taxBox = document.getElementById('tax-treatment-box');
+      if (reason.taxInfo) {
+        const t = reason.taxInfo;
+        let isDisPhysical = (state.reasonKey === 'DISASTER' && state.subType === 'DIS_PHYSICAL');
+        const isRecognized = (t.recognized === true && !isDisPhysical) || (t.recognized === 'PARTIAL' && !isDisPhysical);
+
+        const boxBorder = isRecognized ? 'border-emerald-300 bg-emerald-50/60' : 'border-slate-200 bg-slate-50';
+        const badgeStyle = isRecognized
+          ? 'bg-emerald-600 text-white'
+          : 'bg-slate-700 text-white';
+
+        taxBox.className = `rounded-xl p-3.5 border-2 ${boxBorder}`;
+        taxBox.innerHTML = `
+          <div class="flex flex-wrap items-center justify-between gap-2 mb-2">
+            <span class="text-xs font-bold text-slate-900 flex items-center gap-1">⚖️ 세법상 과세 적용 안내 (저율 분리과세 여부)</span>
+            <span class="text-[11px] font-bold px-2.5 py-0.5 rounded-full ${badgeStyle}">
+              ${isDisPhysical ? '단순 물적피해 : 일반과세 (16.5%)' : t.badge}
+            </span>
+          </div>
+          <div class="space-y-1 text-xs text-slate-700">
+            <div>• <strong>회사부담금(DC)·이연퇴직소득(IRP)</strong>: <span class="font-bold ${isRecognized ? 'text-emerald-900' : 'text-slate-900'}">${t.employerTax}</span></div>
+            <div>• <strong>운용수익·세액공제 본인부담금</strong>: <span class="font-bold ${isRecognized ? 'text-emerald-900' : 'text-slate-900'}">${t.profitTax}</span></div>
+            ${t.limitFormula ? `<div class="mt-1.5 p-2 rounded-lg bg-white border border-emerald-200 text-emerald-950 font-bold text-[11px]">📐 ${t.limitFormula}</div>` : ''}
+            <p class="text-[11px] text-slate-600 pt-1 leading-relaxed">💡 ${t.note}</p>
+          </div>
+        `;
+      }
+
+      document.getElementById('period-text').textContent = reason.period;
+      document.getElementById('limit-badge').textContent = reason.limitNote || '';
+
+      const reqDocs = [...reason.baseDocs];
+      if (state.subType && reason.subTypes) {
+        const foundSub = reason.subTypes.find(s => s.id === state.subType);
+        if (foundSub && foundSub.docs) {
+          reqDocs.push(...foundSub.docs);
+        }
+      }
+
+      document.getElementById('req-count').textContent = `${reqDocs.length}건`;
+      document.getElementById('required-docs-list').innerHTML = reqDocs.map((doc, idx) => renderDocItem(doc, `req-${idx}`, 'blue')).join('');
+
+      const addDocs = [];
+      const postChecks = [];
+      (reason.conditions || []).forEach(c => {
+        if (state.conditions.has(c.id) && (!c.onlyPlan || c.onlyPlan === state.planType)) {
+          addDocs.push(...c.docs);
+          if (c.postCheck) postChecks.push(c.postCheck);
+        }
+      });
+
+      const addSection = document.getElementById('additional-docs-section');
+      if (addDocs.length > 0) {
+        addSection.classList.remove('hidden');
+        document.getElementById('add-count').textContent = `${addDocs.length}건`;
+        document.getElementById('additional-docs-list').innerHTML = addDocs.map((doc, idx) => renderDocItem(doc, `add-${idx}`, 'indigo')).join('');
+      } else {
+        addSection.classList.add('hidden');
+      }
+
+      const postAlert = document.getElementById('post-check-alert');
+      if (postChecks.length > 0) {
+        postAlert.classList.remove('hidden');
+        document.getElementById('post-check-list').innerHTML = postChecks.map(p => `<li>${p}</li>`).join('');
+      } else {
+        postAlert.classList.add('hidden');
+      }
+    }
+
+    function renderDocItem(doc, docKey, colorTheme) {
+      const isChecked = state.checkedDocs.has(docKey);
+      const badgeColor = doc.validity.includes('1개월')
+        ? 'bg-rose-100 text-rose-700 border-rose-200'
+        : doc.validity.includes('3개월')
+        ? 'bg-amber-100 text-amber-800 border-amber-200'
+        : 'bg-slate-100 text-slate-700 border-slate-200';
+
+      const borderStyle = isChecked
+        ? (colorTheme === 'indigo' ? 'border-indigo-500 bg-indigo-50/40' : 'border-blue-500 bg-blue-50/40')
+        : 'border-slate-200 hover:border-blue-400 bg-white';
+
+      const boxStyle = isChecked
+        ? (colorTheme === 'indigo' ? 'bg-indigo-600 border-indigo-600 text-white' : 'bg-blue-600 border-blue-600 text-white')
+        : 'bg-white border-slate-300 text-transparent';
+
+      return `
+        <div role="button" tabindex="0" onclick="toggleDocCheck('${docKey}')" class="p-3.5 rounded-xl border transition cursor-pointer select-none shadow-2xs ${borderStyle}">
+          <div class="flex items-start gap-3">
+            <div class="mt-0.5 w-4 h-4 rounded border flex items-center justify-center shrink-0 transition-colors ${boxStyle}">
+              <svg class="w-3 h-3 stroke-current stroke-[3]" fill="none" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path>
+              </svg>
+            </div>
+            <div class="flex-1 min-w-0">
+              <div class="flex flex-wrap items-center justify-between gap-1.5">
+                <span class="text-xs sm:text-sm font-bold leading-snug ${isChecked ? 'line-through text-slate-400' : 'text-slate-900'}">${doc.name}</span>
+                <span class="text-[11px] font-semibold px-2 py-0.5 rounded-md border shrink-0 ${badgeColor}">⏳ ${doc.validity}</span>
+              </div>
+              <p class="text-xs text-slate-500 mt-1.5 leading-relaxed">· ${doc.detail}</p>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    function copyChecklist() {
+      const reason = REASONS_DB[state.reasonKey];
+      const planLabel = state.planType === 'DC' ? 'DC형 중도인출' : state.planType === 'IRP' ? '개인형IRP 중도인출' : '개인형IRP 부득이한 인출(비정기연금/계약해지)';
+      
+      const reqDocs = [...reason.baseDocs];
+      if (state.subType && reason.subTypes) {
+        const foundSub = reason.subTypes.find(s => s.id === state.subType);
+        if (foundSub) reqDocs.push(...foundSub.docs);
+      }
+
+      const addDocs = [];
+      (reason.conditions || []).forEach(c => {
+        if (state.conditions.has(c.id) && (!c.onlyPlan || c.onlyPlan === state.planType)) {
+          addDocs.push(...c.docs);
+        }
+      });
+
+      let text = `[퇴직연금 중도인출 징구서류 & 과세 안내]\n`;
+      text += `■ 제도구분: ${planLabel}\n`;
+      text += `■ 인출사유: ${reason.title}\n`;
+      text += `■ 신청시기: ${reason.period}\n`;
+      if (reason.taxInfo) {
+        text += `■ 세법상 과세방식: ${reason.taxInfo.badge}\n`;
+        text += `  - 회사부담금/이연퇴직소득: ${reason.taxInfo.employerTax}\n`;
+        text += `  - 운용수익/세액공제분: ${reason.taxInfo.profitTax}\n`;
+        if (reason.taxInfo.limitFormula) text += `  - ${reason.taxInfo.limitFormula}\n`;
+      }
+      text += `\n[1. 필수 징구서류]\n`;
+      reqDocs.forEach((d, i) => {
+        text += `${i + 1}. ${d.name} (${d.validity})\n   └ ${d.detail}\n`;
+      });
+
+      if (addDocs.length > 0) {
+        text += `\n[2. 케이스별 추가 징구서류]\n`;
+        addDocs.forEach((d, i) => {
+          text += `${i + 1}. ${d.name} (${d.validity})\n   └ ${d.detail}\n`;
+        });
+      }
+
+      text += `\n※ 공통 유의사항: IRP 계좌 수령 불가(본인명의 일반계좌만 가능), 법정 인출순서(①비과세 본인부담금 → ②퇴직금·회사부담금 → ③세액공제분·운용수익) 적용`;
+
+      navigator.clipboard.writeText(text).then(() => {
+        const toast = document.getElementById('toast');
+        toast.textContent = '클립보드에 서류 목록이 복사되었습니다!';
+        toast.classList.remove('opacity-0');
+        setTimeout(() => toast.classList.add('opacity-0'), 2400);
+      });
+    }
+
+    function downloadSelfHtml() {
+      const htmlContent = '<!DOCTYPE html>\n' + document.documentElement.outerHTML;
+      const blob = new Blob([htmlContent], { type: 'text/html;charset=utf-8' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = '퇴직연금_중도인출_심사마법사.html';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    }
+
+    function renderFlowchart(type) {
+      ['MAIN', 'HOUSE_BUY', 'HOUSE_RENT', 'MEDICAL', 'LEGAL_DISASTER', 'IRP_SPECIAL'].forEach(k => {
+        const btn = document.getElementById(`fc-btn-${k}`);
+        if (!btn) return;
+        if (k === type) {
+          btn.className = 'px-3 py-1.5 rounded-lg text-xs font-bold bg-slate-900 text-white shadow-sm transition';
+        } else {
+          btn.className = 'px-3 py-1.5 rounded-lg text-xs font-bold text-slate-600 hover:bg-white transition';
+        }
+      });
+
+      const canvas = document.getElementById('flowchart-canvas');
+
+      if (type === 'MAIN') {
+        canvas.innerHTML = `
+          <div class="min-w-[820px] flex flex-col items-center space-y-4 py-2">
+            <div class="bg-slate-900 text-white px-6 py-3 rounded-2xl font-bold text-sm shadow-md">
+              🚀 퇴직연금 중도인출 서류 판정 & 세법상 저율 분리과세 통합 프로세스
+            </div>
+            <div class="h-5 w-0.5 bg-slate-300"></div>
+            <div class="grid grid-cols-2 gap-6 w-full max-w-5xl">
+              <!-- Left Branch: DC / IRP 법정 중도인출 -->
+              <div class="bg-blue-50/70 border-2 border-blue-200 rounded-2xl p-4 space-y-3">
+                <div class="flex items-center justify-between">
+                  <span class="font-bold text-xs text-blue-950">1. DC형 / 개인형IRP 법정 중도인출 (6대 사유)</span>
+                  <span class="text-[11px] bg-blue-600 text-white px-2 py-0.5 rounded font-bold">근로자퇴직급여 보장법</span>
+                </div>
+                <div class="grid grid-cols-2 gap-2">
+                  <button type="button" onclick="openWizardWith('DC', 'HOUSE_BUY')" class="flow-node text-left p-2.5 bg-white rounded-xl border border-slate-200 hover:border-blue-500 shadow-2xs">
+                    <div class="text-xs font-bold text-slate-800">① 무주택자 주택구입</div>
+                    <div class="text-[10px] text-slate-500 mt-0.5">일반과세 (퇴직100% / 기타16.5%)</div>
+                  </button>
+                  <button type="button" onclick="openWizardWith('DC', 'HOUSE_RENT')" class="flow-node text-left p-2.5 bg-white rounded-xl border border-slate-200 hover:border-blue-500 shadow-2xs">
+                    <div class="text-xs font-bold text-slate-800">② 무주택자 전/월세보증금</div>
+                    <div class="text-[10px] text-slate-500 mt-0.5">일반과세 (DC 1회 / IRP 무제한)</div>
+                  </button>
+                  <button type="button" onclick="openWizardWith('DC', 'MEDICAL')" class="flow-node text-left p-2.5 bg-white rounded-xl border border-emerald-300 hover:border-emerald-500 shadow-2xs">
+                    <div class="text-xs font-bold text-emerald-950">③ 6개월 이상 요양</div>
+                    <div class="text-[10px] text-emerald-700 font-bold mt-0.5">✅ 저율과세 (산식 한도 내)</div>
+                  </button>
+                  <button type="button" onclick="openWizardWith('DC', 'LEGAL')" class="flow-node text-left p-2.5 bg-white rounded-xl border border-emerald-300 hover:border-emerald-500 shadow-2xs">
+                    <div class="text-xs font-bold text-emerald-950">④ 개인회생 / 파산선고</div>
+                    <div class="text-[10px] text-emerald-700 font-bold mt-0.5">✅ 저율과세 (전액 한도없음)</div>
+                  </button>
+                  <button type="button" onclick="openWizardWith('DC', 'DISASTER')" class="flow-node text-left p-2.5 bg-white rounded-xl border border-amber-300 hover:border-amber-500 shadow-2xs col-span-2">
+                    <div class="text-xs font-bold text-slate-800">⑤ 재난 피해 (물적/인적)</div>
+                    <div class="text-[10px] text-amber-800 font-semibold mt-0.5">⚠️ 천재지변·15일 입원은 저율과세 / 단순 물적피해는 일반과세(16.5%)</div>
+                  </button>
+                </div>
+              </div>
+
+              <!-- Right Branch: IRP 부득이한 인출 (비정기연금/해지) -->
+              <div class="bg-emerald-50/70 border-2 border-emerald-200 rounded-2xl p-4 space-y-3">
+                <div class="flex items-center justify-between">
+                  <span class="font-bold text-xs text-emerald-950">2. 개인형IRP 부득이한 인출 (비정기연금/해지)</span>
+                  <span class="text-[11px] bg-emerald-600 text-white px-2 py-0.5 rounded font-bold">전 항목 저율 분리과세</span>
+                </div>
+                <div class="grid grid-cols-2 gap-2">
+                  <button type="button" onclick="openWizardWith('IRP_SPECIAL', 'IRP_SPEC_MED')" class="flow-node text-left p-2.5 bg-white rounded-xl border border-emerald-200 hover:border-emerald-500 shadow-2xs">
+                    <div class="text-xs font-bold text-slate-800">① 3개월 이상 요양</div>
+                    <div class="text-[10px] text-emerald-700 font-semibold mt-0.5">산식 한도 내 특례세율</div>
+                  </button>
+                  <button type="button" onclick="openWizardWith('IRP_SPECIAL', 'IRP_SPEC_LEGAL')" class="flow-node text-left p-2.5 bg-white rounded-xl border border-emerald-200 hover:border-emerald-500 shadow-2xs">
+                    <div class="text-xs font-bold text-slate-800">② 개인회생 / 파산선고</div>
+                    <div class="text-[10px] text-emerald-700 font-semibold mt-0.5">전액 특례세율</div>
+                  </button>
+                  <button type="button" onclick="openWizardWith('IRP_SPECIAL', 'IRP_SPEC_DISASTER')" class="flow-node text-left p-2.5 bg-white rounded-xl border border-emerald-200 hover:border-emerald-500 shadow-2xs">
+                    <div class="text-xs font-bold text-slate-800">③ 천재지변 / 재난피해</div>
+                    <div class="text-[10px] text-emerald-700 font-semibold mt-0.5">증빙 서류 제출</div>
+                  </button>
+                  <button type="button" onclick="openWizardWith('IRP_SPECIAL', 'IRP_SPEC_DEATH')" class="flow-node text-left p-2.5 bg-white rounded-xl border border-emerald-200 hover:border-emerald-500 shadow-2xs">
+                    <div class="text-xs font-bold text-slate-800">④ 가입자의 사망</div>
+                    <div class="text-[10px] text-emerald-700 font-semibold mt-0.5">상속인 청구 / 전액 특례</div>
+                  </button>
+                  <button type="button" onclick="openWizardWith('IRP_SPECIAL', 'IRP_SPEC_MIGRATION')" class="flow-node text-left p-2.5 bg-white rounded-xl border border-emerald-200 hover:border-emerald-500 shadow-2xs">
+                    <div class="text-xs font-bold text-slate-800">⑤ 가입자의 해외이주</div>
+                    <div class="text-[10px] text-emerald-700 font-semibold mt-0.5">입금 후 3년 이후 이주 조건</div>
+                  </button>
+                  <button type="button" onclick="openWizardWith('IRP_SPECIAL', 'IRP_SPEC_SUSPEND')" class="flow-node text-left p-2.5 bg-white rounded-xl border border-emerald-200 hover:border-emerald-500 shadow-2xs">
+                    <div class="text-xs font-bold text-slate-800">⑥ 금융회사 영업정지</div>
+                    <div class="text-[10px] text-emerald-700 font-semibold mt-0.5">전액 특례세율</div>
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <div class="h-5 w-0.5 bg-slate-300"></div>
+            <div class="bg-slate-900 text-white px-8 py-3.5 rounded-2xl font-bold text-xs shadow-lg text-center">
+              ✅ 법정 인출 순서 자동 적용 : ① 과세제외금액(비과세 0%) → ② 이연퇴직소득·회사부담금 → ③ 세액공제분·운용수익
+            </div>
+          </div>
+        `;
+      } else if (type === 'IRP_SPECIAL') {
+        canvas.innerHTML = `
+          <div class="min-w-[820px] space-y-4 py-2">
+            <div class="flex items-center justify-between bg-emerald-50 border border-emerald-200 px-5 py-3 rounded-xl">
+              <div>
+                <h4 class="text-sm font-bold text-emerald-950">⚖️ IRP 부득이한 인출 (비정기연금/계약해지) & 세법상 저율 분리과세 작동 원리</h4>
+                <p class="text-xs text-emerald-700">연금저축계좌와 기준 동일 · 사유 확인일로부터 6개월 이내 신청 시 연금소득세 분리과세</p>
+              </div>
+              <button type="button" onclick="openWizardWith('IRP_SPECIAL', 'IRP_SPEC_MED')" class="bg-emerald-600 text-white text-xs font-bold px-3.5 py-2 rounded-lg shadow hover:bg-emerald-700">마법사에서 열기 →</button>
+            </div>
+
+            <div class="grid grid-cols-3 gap-4">
+              <div class="bg-slate-50 border border-slate-200 rounded-xl p-4 space-y-2">
+                <div class="text-xs font-extrabold text-blue-700 uppercase">Step 1. 법정 인출 순서</div>
+                <div class="p-2.5 bg-white rounded-lg border border-emerald-300 text-xs">
+                  <strong class="text-emerald-800">1순위: 과세제외금액</strong><br/>
+                  <span class="text-[11px] text-slate-600">세액공제 받지 않은 본인 추가납입금 → <strong>사유 불문 세금 0% (비과세)</strong></span>
+                </div>
+                <div class="p-2.5 bg-white rounded-lg border border-blue-200 text-xs">
+                  <strong class="text-blue-900">2순위: 퇴직금 원금·회사부담금</strong><br/>
+                  <span class="text-[11px] text-slate-600">DC 사용자부담금 원금 & IRP 이연퇴직소득</span>
+                </div>
+                <div class="p-2.5 bg-white rounded-lg border border-indigo-200 text-xs">
+                  <strong class="text-indigo-900">3순위: 세액공제분 & 운용수익</strong><br/>
+                  <span class="text-[11px] text-slate-600">DC 회사부담금이 만든 운용수익도 3순위로 분류됨!</span>
+                </div>
+              </div>
+
+              <div class="bg-slate-50 border border-slate-200 rounded-xl p-4 space-y-2">
+                <div class="text-xs font-extrabold text-emerald-700 uppercase">Step 2. 재원별 감면 세율</div>
+                <div class="p-3 bg-white rounded-lg border border-slate-200 text-xs space-y-1">
+                  <div class="font-bold text-slate-900">🏢 2순위 재원 (회사부담금·퇴직금)</div>
+                  <div class="text-rose-600 text-[11px]">· 일반 인출: 퇴직소득세 100%</div>
+                  <div class="text-emerald-700 font-bold text-[11px]">· 부득이한 인출: 퇴직소득세의 70% (30% 감면 연금소득세)</div>
+                </div>
+                <div class="p-3 bg-white rounded-lg border border-slate-200 text-xs space-y-1">
+                  <div class="font-bold text-slate-900">📈 3순위 재원 (운용수익·세액공제분)</div>
+                  <div class="text-rose-600 text-[11px]">· 일반 인출: 기타소득세 16.5%</div>
+                  <div class="text-emerald-700 font-bold text-[11px]">· 부득이한 인출: 연금소득세 3.3%~5.5% (70세 미만 5.5%, 70~79세 4.4%, 80세 이상 3.3%)</div>
+                  <div class="text-[10px] text-blue-700 font-semibold">※ 연 1,500만 원 분리과세 한도 계산에서 완전 제외!</div>
+                </div>
+              </div>
+
+              <div class="bg-slate-50 border border-slate-200 rounded-xl p-4 space-y-2">
+                <div class="text-xs font-extrabold text-amber-700 uppercase">Step 3. 사유별 저율과세 한도</div>
+                <div class="p-3 bg-emerald-900 text-white rounded-lg text-xs space-y-1.5">
+                  <div class="font-bold text-emerald-300">① 요양(6개월/3개월) & 재난 15일 입원</div>
+                  <div class="bg-black/40 p-2 rounded text-[11px] font-mono">
+                    실제 의료비 + 간병인 비용 + (요양개월수 × 150만원) - 200만원
+                  </div>
+                  <div class="text-[10px] text-emerald-200">위 산식 한도 내 금액까지만 저율 분리과세 인정</div>
+                </div>
+                <div class="p-3 bg-white rounded-lg border border-slate-200 text-xs">
+                  <div class="font-bold text-slate-900">② 회생·파산 / 천재지변 / 사망 / 영업정지 / 해외이주(3년 후)</div>
+                  <div class="text-emerald-700 font-bold text-[11px] mt-0.5">인출 한도 제한 없음 (전액 저율 과세)</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        `;
+      } else if (type === 'HOUSE_BUY') {
+        canvas.innerHTML = `
+          <div class="min-w-[780px] space-y-4 py-2">
+            <div class="flex items-center justify-between bg-blue-50 border border-blue-200 px-5 py-3 rounded-xl">
+              <div>
+                <h4 class="text-sm font-bold text-blue-950">① 무주택자인 가입자의 주택 구입 상세 순서도</h4>
+                <p class="text-xs text-blue-700">신청시기: 계약체결일 ~ 소유권이전등기접수일 이후 1개월 이내 · 과세: 일반 과세(퇴직소득세 100% / 기타소득세 16.5%)</p>
+              </div>
+              <button type="button" onclick="openWizardWith('DC', 'HOUSE_BUY')" class="bg-blue-600 text-white text-xs font-bold px-3.5 py-2 rounded-lg shadow hover:bg-blue-700">마법사에서 열기 →</button>
+            </div>
+            <div class="grid grid-cols-3 gap-4">
+              <div class="bg-slate-50 border border-slate-200 rounded-xl p-4 space-y-2">
+                <div class="text-xs font-extrabold text-blue-600 uppercase">Step A. 공통 필수서류 (4종)</div>
+                <div class="p-2.5 bg-white rounded-lg border border-slate-200 text-xs font-semibold">1. 중도인출신청서 + 개인정보동의서</div>
+                <div class="p-2.5 bg-white rounded-lg border border-slate-200 text-xs font-semibold">2. 현거주지 주민등록등본 <span class="text-amber-600">(3개월)</span></div>
+                <div class="p-2.5 bg-white rounded-lg border border-slate-200 text-xs font-semibold">3. 등본주소지 건물등기사항증명서 <span class="text-rose-600">(1개월)</span></div>
+                <div class="p-2.5 bg-white rounded-lg border border-slate-200 text-xs font-semibold">4. 지방세 세목별 과세증명서 <span class="text-slate-500">(전국/재산세)</span></div>
+              </div>
+              <div class="bg-slate-50 border border-slate-200 rounded-xl p-4 space-y-2">
+                <div class="text-xs font-extrabold text-indigo-600 uppercase">Step B. 구입유형별 필수서류 (택1)</div>
+                <div class="p-2.5 bg-white rounded-lg border border-slate-200 text-xs"><strong>[매매]</strong> 매매계약서(사본)</div>
+                <div class="p-2.5 bg-white rounded-lg border border-slate-200 text-xs"><strong>[분양]</strong> 분양/공급계약서 전체 또는 분양권매매계약서</div>
+                <div class="p-2.5 bg-white rounded-lg border border-slate-200 text-xs"><strong>[주택조합]</strong> 조합공급계약서 (가입계약서만 있으면 영수증 추가)</div>
+                <div class="p-2.5 bg-white rounded-lg border border-slate-200 text-xs"><strong>[신축]</strong> 공사계약서 + 건축허가서/착공신고필증</div>
+                <div class="p-2.5 bg-white rounded-lg border border-slate-200 text-xs"><strong>[경매/공매]</strong> 입찰보증금영수증 + 사건검색 + 통지서</div>
+              </div>
+              <div class="bg-slate-50 border border-slate-200 rounded-xl p-4 space-y-2">
+                <div class="text-xs font-extrabold text-amber-600 uppercase">Step C. 조건별 추가서류 (해당 시)</div>
+                <div class="p-2 bg-white rounded-lg border border-slate-200 text-[11px]">· <strong>개인간 직거래</strong> → 계약금 입금확인증/영수증</div>
+                <div class="p-2 bg-white rounded-lg border border-slate-200 text-[11px]">· <strong>잔금일 경과 후 등기 1개월 내</strong> → 매수주택 등기부등본</div>
+                <div class="p-2 bg-white rounded-lg border border-slate-200 text-[11px]">· <strong>매수주택 == 현거주지 동일</strong> → 초본 + 직전주소 등기</div>
+                <div class="p-2 bg-white rounded-lg border border-slate-200 text-[11px]">· <strong>보유주택 매도 후 매수</strong> → 매도계약서/등기 (1일 이상 차이)</div>
+                <div class="p-2 bg-amber-50 rounded-lg border border-amber-300 text-[11px]">· <strong>배우자 계약 후 공동명의 예정</strong> → 서약서 + 매매 시 사후등기 확인(必)</div>
+              </div>
+            </div>
+          </div>
+        `;
+      } else if (type === 'HOUSE_RENT') {
+        canvas.innerHTML = `
+          <div class="min-w-[780px] space-y-4 py-2">
+            <div class="flex items-center justify-between bg-blue-50 border border-blue-200 px-5 py-3 rounded-xl">
+              <div>
+                <h4 class="text-sm font-bold text-blue-950">② 무주택자인 가입자의 주거목적 전/월세 보증금 상세 순서도</h4>
+                <p class="text-xs text-blue-700">신청시기: 계약체결일 ~ 잔금지급일 후 1개월 이내 (DC는 사업장 재직 중 1회만 가능 / 일반 과세 적용)</p>
+              </div>
+              <button type="button" onclick="openWizardWith('DC', 'HOUSE_RENT')" class="bg-blue-600 text-white text-xs font-bold px-3.5 py-2 rounded-lg shadow hover:bg-blue-700">마법사에서 열기 →</button>
+            </div>
+            <div class="grid grid-cols-3 gap-4">
+              <div class="bg-slate-50 border border-slate-200 rounded-xl p-4 space-y-2">
+                <div class="text-xs font-extrabold text-red-600 uppercase">Step A. 사전 필터링 (불가 사유)</div>
+                <div class="p-2.5 bg-red-50 text-red-900 rounded-lg border border-red-200 text-xs">🚫 DC형 가입자가 해당 사업장 재직 중 전/월세 인출 이력이 있는 경우</div>
+                <div class="p-2.5 bg-red-50 text-red-900 rounded-lg border border-red-200 text-xs">🚫 보증금 없는 순수 월세 / 무보증 원룸 예치금</div>
+                <div class="p-2.5 bg-red-50 text-red-900 rounded-lg border border-red-200 text-xs">🚫 연장계약인데 보증금 인상분 없이 월세만 인상된 경우</div>
+              </div>
+              <div class="bg-slate-50 border border-slate-200 rounded-xl p-4 space-y-2">
+                <div class="text-xs font-extrabold text-blue-600 uppercase">Step B. 공통 필수서류 (5종)</div>
+                <div class="p-2.5 bg-white rounded-lg border border-slate-200 text-xs font-semibold">1. 중도인출신청서 + 개인정보동의서</div>
+                <div class="p-2.5 bg-white rounded-lg border border-slate-200 text-xs font-semibold">2. 현거주지 주민등록등본 (3개월)</div>
+                <div class="p-2.5 bg-white rounded-lg border border-slate-200 text-xs font-semibold">3. 등본주소지 건물등기사항증명서 (1개월)</div>
+                <div class="p-2.5 bg-white rounded-lg border border-slate-200 text-xs font-semibold">4. 지방세 세목별 과세증명서 (전국/재산세)</div>
+                <div class="p-2.5 bg-white rounded-lg border border-slate-200 text-xs font-semibold">5. 임대차계약서 또는 전월세계약서 사본</div>
+              </div>
+              <div class="bg-slate-50 border border-slate-200 rounded-xl p-4 space-y-2">
+                <div class="text-xs font-extrabold text-indigo-600 uppercase">Step C. 예외 케이스별 추가서류</div>
+                <div class="p-2 bg-white rounded-lg border border-slate-200 text-[11px]">· <strong>개인간 직거래(미전입)</strong> → 계약금 입금확인증/영수증</div>
+                <div class="p-2 bg-white rounded-lg border border-slate-200 text-[11px]">· <strong>임차주택 == 현거주지(신규)</strong> → 초본 + 직전주소 등기</div>
+                <div class="p-2 bg-white rounded-lg border border-slate-200 text-[11px]">· <strong>임차주택 == 현거주지(연장)</strong> → 초본 (주소 상이 시 확약서)</div>
+                <div class="p-2 bg-amber-50 rounded-lg border border-amber-300 text-[11px]">· <strong>주거용도 미확인(미전입)</strong> → 건축물대장 + 전입확약서 + 전입 후 등본 사후확인(必)</div>
+                <div class="p-2 bg-white rounded-lg border border-slate-200 text-[11px]">· <strong>동거 가족명의 계약</strong> → 주민등록등본(동일세대 필수) + 서약서</div>
+              </div>
+            </div>
+          </div>
+        `;
+      } else if (type === 'MEDICAL') {
+        canvas.innerHTML = `
+          <div class="min-w-[780px] space-y-4 py-2">
+            <div class="flex items-center justify-between bg-emerald-50 border border-emerald-200 px-5 py-3 rounded-xl">
+              <div>
+                <h4 class="text-sm font-bold text-emerald-950">③ 본인 및 부양가족의 6개월 이상 요양 상세 순서도 (저율 분리과세 인정)</h4>
+                <p class="text-xs text-emerald-700">저율과세 한도 = 실제 의료비 + 간병인 비용 + (요양 개월 수 × 150만 원) - 200만 원</p>
+              </div>
+              <button type="button" onclick="openWizardWith('DC', 'MEDICAL')" class="bg-emerald-600 text-white text-xs font-bold px-3.5 py-2 rounded-lg shadow hover:bg-emerald-700">마법사에서 열기 →</button>
+            </div>
+            <div class="grid grid-cols-3 gap-4">
+              <div class="bg-slate-50 border border-slate-200 rounded-xl p-4 space-y-2">
+                <div class="text-xs font-extrabold text-blue-600 uppercase">Step A. 제도별 소득요건 분기</div>
+                <div class="p-3 bg-white rounded-lg border border-blue-200 text-xs">
+                  <strong class="text-blue-900">[DC형 가입자]</strong><br/>
+                  의료비(①지출 + ②확정예정) &gt; min(전년도 임금, 직전 1년 임금) × <strong>12.5% 초과 필수</strong>
+                </div>
+                <div class="p-3 bg-white rounded-lg border border-emerald-200 text-xs">
+                  <strong class="text-emerald-900">[개인형IRP 가입자]</strong><br/>
+                  근로소득 여부와 무관하게 6개월 이상 요양 시 신청 가능
+                </div>
+              </div>
+              <div class="bg-slate-50 border border-slate-200 rounded-xl p-4 space-y-2">
+                <div class="text-xs font-extrabold text-indigo-600 uppercase">Step B. 부양가족 연령 & 장애 검증</div>
+                <div class="p-2.5 bg-white rounded-lg border border-slate-200 text-xs">· <strong>배우자</strong>: 연령 무관</div>
+                <div class="p-2.5 bg-white rounded-lg border border-slate-200 text-xs">· <strong>직계존속</strong>: 만 60세 이상</div>
+                <div class="p-2.5 bg-white rounded-lg border border-slate-200 text-xs">· <strong>직계비속</strong>: 만 20세 이하</div>
+                <div class="p-2.5 bg-white rounded-lg border border-slate-200 text-xs">· <strong>형제자매</strong>: 만 60세 이상 또는 만 20세 이하</div>
+                <div class="p-2.5 bg-indigo-50 rounded-lg border border-indigo-200 text-xs text-indigo-900">💡 <strong>장애인 부양가족</strong>: 장애인등록증 제출 시 연령요건 면제!</div>
+              </div>
+              <div class="bg-slate-50 border border-slate-200 rounded-xl p-4 space-y-2">
+                <div class="text-xs font-extrabold text-emerald-700 uppercase">Step C. 필수 및 추가 의료증빙</div>
+                <div class="p-2.5 bg-white rounded-lg border border-slate-200 text-xs">1. 진단서/소견서 (6개월 이내 발급, "6개월 이상" 명시 또는 산정특례)</div>
+                <div class="p-2.5 bg-white rounded-lg border border-slate-200 text-xs">2. 직전 1년 진료비/약제비 영수증 + 1개월 내 청구서/견적서 + 간병료영수증</div>
+                <div class="p-2.5 bg-white rounded-lg border border-slate-200 text-xs">3. 성년 부양가족 시 [부양가족 개인정보동의서] + 가족관계증명서</div>
+              </div>
+            </div>
+          </div>
+        `;
+      } else if (type === 'LEGAL_DISASTER') {
+        canvas.innerHTML = `
+          <div class="min-w-[780px] grid grid-cols-2 gap-6 py-2">
+            <div class="bg-slate-50 border border-slate-200 rounded-2xl p-5 space-y-3">
+              <div class="flex items-center justify-between">
+                <h4 class="text-sm font-bold text-slate-900">④ 개인회생 / 파산선고 (전액 저율 분리과세)</h4>
+                <button type="button" onclick="openWizardWith('DC', 'LEGAL')" class="bg-blue-600 text-white text-xs font-bold px-3 py-1.5 rounded-lg">마법사 열기</button>
+              </div>
+              <div class="p-3 bg-white rounded-xl border border-slate-200 text-xs space-y-1.5">
+                <div class="font-bold text-blue-700">1. 개인회생절차 개시결정 (5년 이내 / 사유 확인 6개월 내)</div>
+                <div>· 회생절차 개시결정문 또는 변제인가 확정증명원</div>
+                <div>· <strong>대법원 나의사건검색 출력물 (진행경과 [전체], 1개월 내)</strong></div>
+                <div class="text-red-600">※ 폐지결정/면책결정 시 불가 (단, 즉시항고 중이면 항고확인서+상환계획서+납입영수증으로 가능)</div>
+              </div>
+              <div class="p-3 bg-white rounded-xl border border-slate-200 text-xs space-y-1">
+                <div class="font-bold text-indigo-700">2. 파산선고 (5년 이내 / 사유 확인 6개월 내)</div>
+                <div>· 최근 5년 이내 파산선고문 사본 (면책·복권 여부 불문, 인출한도 없음)</div>
+              </div>
+            </div>
+
+            <div class="bg-slate-50 border border-slate-200 rounded-2xl p-5 space-y-3">
+              <div class="flex items-center justify-between">
+                <h4 class="text-sm font-bold text-slate-900">⑤ 재난 피해 (인적피해만 저율과세 / 물적은 일반과세)</h4>
+                <button type="button" onclick="openWizardWith('DC', 'DISASTER')" class="bg-blue-600 text-white text-xs font-bold px-3 py-1.5 rounded-lg">마법사 열기</button>
+              </div>
+              <div class="p-3 bg-emerald-50 rounded-xl border border-emerald-200 text-xs space-y-1">
+                <div class="font-bold text-emerald-900">1. 천재지변 & 인적피해 (15일 이상 입원) → 저율 분리과세 인정</div>
+                <div>· <strong>본인 15일 이상 입원</strong>: 입원사실 확인서류(퇴원일/종료일 명시) → 요양 산식 한도 내 저율 과세</div>
+                <div>· <strong>배우자/부양가족 실종</strong>: 실종증명서 + 가족관계증명서/등본</div>
+              </div>
+              <div class="p-3 bg-rose-50 rounded-xl border border-rose-200 text-xs space-y-1">
+                <div class="font-bold text-rose-900">2. 단순 물적피해 (주거시설 유실·전파·반파) → 일반 과세(16.5%)</div>
+                <div>· 건축물대장등본 + (임차 시) 임대차계약서 + 피해사실확인서</div>
+                <div class="text-rose-700 font-semibold">※ 중도인출은 가능하나 소득세법상 부득이한 사유 제외(퇴직소득세 100%, 기타소득세 16.5%)</div>
+              </div>
+            </div>
+          </div>
+        `;
+      }
+    }
+
+    function openWizardWith(planType, reasonKey) {
+      state.planType = planType;
+      state.reasonKey = reasonKey;
+      selectPlanType(planType);
+      selectReason(reasonKey);
+      switchMainTab('wizard');
+    }
+
+    function formatKRW(num) {
+      return Math.round(num).toLocaleString('ko-KR') + ' 원';
+    }
+
+    function runMedicalCalc() {
+      const plan = document.getElementById('calc-plan').value;
+      const tenure = document.getElementById('calc-tenure').value;
+
+      const over1Box = document.getElementById('wage-over1-box');
+      const under1Box = document.getElementById('wage-under1-box');
+
+      if (tenure === 'OVER1') {
+        over1Box.classList.remove('hidden');
+        under1Box.classList.add('hidden');
+      } else {
+        over1Box.classList.add('hidden');
+        under1Box.classList.remove('hidden');
+      }
+
+      let annualWage = 0;
+      if (tenure === 'OVER1') {
+        const prev = Number(document.getElementById('calc-prev-wage').value) || 0;
+        const recent = Number(document.getElementById('calc-recent-wage').value) || 0;
+        annualWage = (prev > 0 && recent > 0) ? Math.min(prev, recent) : Math.max(prev, recent);
+      } else {
+        const monthly = Number(document.getElementById('calc-monthly-wage').value) || 0;
+        annualWage = monthly * 12;
+      }
+
+      const medPaid = Number(document.getElementById('calc-med-paid').value) || 0;
+      const medScheduled = Number(document.getElementById('calc-med-scheduled').value) || 0;
+      const totalMed = medPaid + medScheduled;
+
+      const threshold = annualWage * 0.125;
+      const ratio = annualWage > 0 ? (totalMed / annualWage) * 100 : 0;
+      const isEligible = (plan === 'IRP') || (totalMed > threshold);
+
+      document.getElementById('calc-out-wage').textContent = plan === 'IRP' ? '소득요건 무관 (IRP)' : formatKRW(annualWage);
+      document.getElementById('calc-out-threshold').textContent = plan === 'IRP' ? '기준선 없음' : `12.5% 기준선: ${formatKRW(threshold)}`;
+      document.getElementById('calc-out-med').textContent = formatKRW(totalMed);
+      document.getElementById('calc-out-ratio').textContent = plan === 'IRP' ? 'IRP는 비율 무관 신청 가능' : `임금 대비 비율: ${ratio.toFixed(2)}%`;
+
+      const badge = document.getElementById('calc-verdict-badge');
+      const box = document.getElementById('calc-result-box');
+
+      if (isEligible) {
+        badge.textContent = plan === 'IRP' ? '중도인출 가능 (IRP 소득무관)' : '중도인출 가능 (12.5% 초과)';
+        badge.className = 'px-3 py-1 rounded-full text-xs font-extrabold bg-blue-600 text-white';
+        box.className = 'rounded-2xl p-5 border-2 border-blue-200 bg-blue-50/60 space-y-3 mt-4';
+      } else {
+        badge.textContent = '중도인출 불가 (12.5% 이하)';
+        badge.className = 'px-3 py-1 rounded-full text-xs font-extrabold bg-red-600 text-white';
+        box.className = 'rounded-2xl p-5 border-2 border-red-200 bg-red-50/60 space-y-3 mt-4';
+      }
+    }
+
+    function runIrpSpecialCalc() {
+      const med = Number(document.getElementById('irp-med-cost').value) || 0;
+      const care = Number(document.getElementById('irp-care-cost').value) || 0;
+      const months = Number(document.getElementById('irp-leave-months').value) || 0;
+      const rate = document.getElementById('irp-age-rate').value;
+
+      const rawLimit = med + care + (months * 1500000) - 2000000;
+      const totalLimit = Math.max(0, rawLimit);
+
+      document.getElementById('irp-out-limit').textContent = formatKRW(totalLimit);
+      document.getElementById('irp-rate-summary').innerHTML = `
+        • <strong>회사부담금(DC) / 이연퇴직소득(IRP)</strong>: 산출 퇴직소득세의 <strong>70%</strong> 연금소득세 분리과세<br/>
+        • <strong>운용수익 / 세액공제 본인부담금</strong>: <strong>${rate}%</strong> 연금소득세 분리과세 (연 1,500만원 한도 제외)
+      `;
+    }
+
+    window.addEventListener('DOMContentLoaded', initApp);
+  </script>
+</body>
+</html>
